@@ -40,11 +40,13 @@ export const SCRIPT_COMMANDS = {
   open_menu: { menu: 'menu', params: 'any?' },
   call: { script: 'scriptName' },
   set_rival_name: {},
+  set_respawn: {},
+  trade: { wanted: 'creature', offer: 'trade_offer', flag: 'flag?' },
   choose_starter: {},
   end: {},
 };
 
-export const MENUS = ['shop', 'storage', 'nickname', 'party', 'bag', 'bestiary', 'heal'];
+export const MENUS = ['shop', 'storage', 'daycare', 'party', 'bag', 'bestiary'];
 
 const STOP = Symbol('stop');
 
@@ -120,6 +122,10 @@ export function createScriptRunner(ctx) {
     open_menu: (c) => ctx.openMenu(c.menu, c.params),
     call: (c) => runList(ctx.getScript(c.script)),
     set_rival_name: () => ctx.setRivalName(),
+    set_respawn: () => ctx.setRespawn(),
+    trade: async (c) => {
+      if ((await ctx.trade(c.wanted, c.offer)) && c.flag) setFlag(state, c.flag);
+    },
     choose_starter: () => ctx.chooseStarter(),
     end: () => STOP,
   };

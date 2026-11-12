@@ -71,7 +71,7 @@ test('game state: party then storage, bestiary, healing', () => {
   assert.deepEqual(state.bestiary.caught, {});
   for (let i = 0; i < 6; i += 1) assert.equal(addCreature(state, makeCreature('pivelin', 5, ['souffle'])), 'party');
   assert.equal(addCreature(state, makeCreature('musaraille', 5, ['egratignure'])), 'storage');
-  assert.equal(state.storage.length, 1);
+  assert.equal(state.storage.boxes[0].creatures.length, 1);
   assert.ok(state.bestiary.caught.musaraille && state.bestiary.seen.musaraille);
   state.party[0].hp = 0;
   state.party[0].status = { id: 'psn' };

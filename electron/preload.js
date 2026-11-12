@@ -5,4 +5,8 @@ contextBridge.exposeInMainWorld('bestiora', {
   save: (json) => ipcRenderer.invoke('save:write', json),
   load: () => ipcRenderer.invoke('save:read'),
   toggleFullscreen: () => ipcRenderer.send('window:toggle-fullscreen'),
+  setFullscreen: (enabled) => ipcRenderer.send('window:set-fullscreen', Boolean(enabled)),
+  setWindowScale: (scale) => ipcRenderer.send('window:set-scale', Number(scale)),
+  saveOptions: (json) => ipcRenderer.invoke('options:write', json),
+  loadOptions: () => ipcRenderer.invoke('options:read'),
 });

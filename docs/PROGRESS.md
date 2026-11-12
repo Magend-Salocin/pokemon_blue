@@ -10,7 +10,7 @@ Chaque session d'implémentation ajoute une entrée en bas de ce fichier : promp
 | 04 Moteur de carte | fait |
 | 05 Logique de combat | fait |
 | 06 Interface de combat | fait |
-| 07 Menus et systèmes | à faire |
+| 07 Menus et systèmes | fait |
 | 08 Audio | à faire |
 | 09 Monde, partie 1 (arènes 1 à 4) | à faire |
 | 10 Monde, partie 2 (arènes 5 à 8) | à faire |
@@ -256,6 +256,36 @@ Décisions
 - Les évolutions sont jouées après la sortie du combat, avant le retour sur la carte. Les évolutions par pierre (`canCancel: false`) seront déclenchées depuis le sac (prompt 07).
 - Pas de combat sans bestiole en forme : aucune rencontre ni dresseur, et un dresseur à qui l'on parle répond `no_healthy_creature`.
 - `window.debugGame.hooks` exposé en mode dev pour les tests pilotés.
+
+Problèmes connus
+- Aucun.
+
+### 2026-11-12 : prompt 07, menus, sac, Bestiaire, Halte, Comptoir et stockage
+
+Fait
+- Composants (`src/ui/components/`) : `MenuLayer` (pile de fenêtres au-dessus de la scène, `open`, `show` pour les fenêtres passives, `openAndKeep` pour garder un menu parent visible), `ListMenu` (défilement, flèches haut et bas), `GridMenu`, `ConfirmWindow`, `QuantityWindow` (±1, ±10, total), `MoneyWindow`.
+- Logique pure (`src/state/`) : sac plafonné à 99 (`addItem` renvoie la quantité ajoutée), `storage.js` (12 boîtes de 30, dépôt avec au moins une bestiole en forme dans l'équipe, retrait, déplacement, libération, renommage), `field-items.js` (soins, Ranimant, pierres, Sucre d'Orge, vitamines plafonnées à 100, Répulsif), `shop.js`, `daycare.js`, `trade.js`, `options.js`. Nouveaux champs d'état : `storage`, `daycare`, `visitedTowns`, `escapePoint`, `playTime`.
+- Écrans : menu Start (`start-menu.js`, entrées masquées tant que non débloquées : BESTIAIRE avec le drapeau `has_bestiary`, BESTIOLES avec une équipe), équipe avec icônes animées et actions RÉSUMÉ / ORDRE / CERF-VOLANT (`party-menu.js`), résumé sur 3 pages (`summary-screen.js`), sac à 3 poches avec UTILISER / JETER (`bag-menu.js`), Bestiaire avec fiche et carte des zones (`bestiary-screen.js`, `src/data/region.js`), carte de dresseur (`trainer-card.js`), Comptoir (`shop-menu.js`), stockage (`storage-menu.js`), Pension et échanges (`services.js`), options (`options-screen.js`), écran titre (`title-scene.js`).
+- Overworld : START ouvre le menu, A face au terminal ouvre le stockage, 1 XP par pas à la Pension, Fil d'Ariane (point de sortie mémorisé en entrant dans une grotte ou un lieu `special`), Cerf-volant (villes avec `flyPoint` visitées), temps de jeu.
+- Scripts : `call: 'halte_heal'` (infirmière, flash blanc, soin, point de retour), nouvelles commandes `set_respawn` et `trade` (`{ wanted, offer: { creature, level, nickname, originalTrainer }, flag }`), `open_menu` branché sur `shop` (avec `params.stock`, entrées conditionnées par badge), `storage`, `daycare`, `party`, `bag`, `bestiary`.
+- Options appliquées en direct (vitesse du texte, animations et style de combat, palette, taille de fenêtre, plein écran, touches) et écrites dans `userData/options.json` par le processus principal (écriture via fichier temporaire puis renommage). Volumes stockés pour le prompt 08.
+- Hors mode dev, le jeu démarre sur l'écran titre ; NOUVELLE PARTIE lance la carte de départ de test. En mode dev, le jeu démarre toujours sur la carte et le menu F1 gagne une entrée « Atlas » (la scène de démo du prompt 01 est supprimée).
+- Cartes de test : Halte dans le bourg (infirmière, vendeur, terminal), pension sur la route, échangeur dans le bourg, point de vol du bourg. Le kit de test donne aussi Cerf-volant, potions, Pierre Lunaire, Sucre d'Orge, Fil d'Ariane, capsules, le badge Ombre et une Lumidanse.
+- Tests : inventaire, stockage, objets de terrain, Comptoir, Pension, échange (12 nouveaux tests, 196 au total).
+- Vérifié dans Electron en pilotant le jeu : menu Start, sac et Pierre Lunaire (Lumidanse évolue en Lumirande), Bestiaire (liste, fiche, zones), carte de dresseur, options, soin à la Halte avec point de retour, achat et vente au Comptoir, dépôt et retrait au stockage, ordre et résumé de l'équipe, Cerf-volant, Fil d'Ariane, dépôt et retrait à la Pension (300 pièces pour 2 niveaux), échange contre « Pipistrou », écran titre puis nouvelle partie.
+
+Reste
+- SAUVER écrit pour l'instant l'état dans le stockage du navigateur (hook `saveGame`) et CONTINUER le relit ; la vraie sauvegarde atomique sur disque arrive au prompt 12.
+- Remappage des touches et options de fenêtre testés seulement par le code.
+
+Décisions
+- Libellés sans majuscules Î, Â, Ê, Ô (absentes de la police) : boîtes « Boîte 1 », LIBÉRER au lieu de RELÂCHER, CHANGER pour la boîte courante, TAILLE pour l'échelle de fenêtre.
+- Le Super Bonbon et la Corde de Sortie du prompt sont le Sucre d'Orge et le Fil d'Ariane (noms choisis au prompt 03).
+- Fil d'Ariane : utilisable dans les cartes `cave`, `special` ou marquées `dungeon: true` ; il ramène devant l'entrée par laquelle on est entré depuis l'extérieur.
+- Cerf-volant : villes = cartes ayant un `flyPoint`, inscrites à la première visite ; requiert l'objet et le badge Ombre, impossible dans un donjon.
+- Vitamines plafonnées à 100 points d'entraînement par stat (le combat peut aller jusqu'à 255).
+- Une évolution inscrit la nouvelle espèce comme capturée au Bestiaire.
+- La carte des zones du Bestiaire (`src/data/region.js`) liste déjà les ids de carte prévus pour les prompts 09 à 11.
 
 Problèmes connus
 - Aucun.

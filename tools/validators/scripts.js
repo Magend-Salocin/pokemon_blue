@@ -52,6 +52,10 @@ function checkReference(kind, value, data, scope) {
       return scope.actors.has(value) ? null : `acteur inconnu « ${value} »`;
     case 'scriptName': return scope.scriptNames.has(value) ? null : `script inconnu « ${value} »`;
     case 'script': return Array.isArray(value) ? null : 'doit être une liste';
+    case 'trade_offer': {
+      if (!has(data.creatures, value?.creature)) return `offre : bestiole inconnue « ${value?.creature} »`;
+      return Number.isInteger(value.level) && typeof value.originalTrainer === 'string' ? null : 'offre : level et originalTrainer requis';
+    }
     default: return null;
   }
 }

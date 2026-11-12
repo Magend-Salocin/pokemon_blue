@@ -22,6 +22,7 @@ import { enterName } from '../../ui/name-entry.js';
 import { choosePartyMember } from '../../ui/party-screen.js';
 import { applyVariables, layoutText } from '../../ui/text-layout.js';
 import { drawWindowFrame } from '../../ui/window-frame.js';
+import { getOptions } from '../../state/options.js';
 import { chooseAction } from '../logic/ai.js';
 import {
   battleStartEvents, chooseSwitch, createBattle, currentPending, freeSwitch, getAvailableActions, resolveTurn,
@@ -276,6 +277,7 @@ export class BattleScene {
   }
 
   async playAnimation(animation, from, to) {
+    if (!getOptions().battleAnimations) return;
     this.view.effect = { animation, t: 0, from, to };
     await this.tween(animation.duration, (t) => { this.view.effect.t = t; });
     this.view.effect = null;
@@ -331,7 +333,7 @@ export class BattleScene {
 
   /** Before a trainer's next creature: « Changer de bestiole ? » (free switch). */
   async offerSwitchBeforeEnemy(event) {
-    if (!this.introDone || this.shown[1].visible) return;
+    if (!this.introDone || this.shown[1].visible || getOptions().battleStyle === 'set') return;
     const player = this.battle.sides[0].party[this.battle.sides[0].active];
     if (player.hp <= 0 || !getAvailableActions(this.battle, 0).canSwitch) return;
     const next = creatureName(this.battle.sides[1].party[event.index]);

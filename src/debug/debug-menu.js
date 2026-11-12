@@ -6,11 +6,12 @@ import { drawText } from '../gfx/font.js';
 import { getColor } from '../gfx/palette.js';
 import { createCreature } from '../battle/logic/creature.js';
 import { hooks } from '../overworld/hooks.js';
+import { AtlasViewerScene } from './atlas-viewer-scene.js';
 import { addItem, getGameState, healParty } from '../state/game-state.js';
 import { PromiseScene, moveCursor } from '../ui/menu-cursor.js';
 import { drawWindowFrame } from '../ui/window-frame.js';
 
-const ROWS = ['species', 'level', 'wild', 'trainer', 'party', 'heal', 'close'];
+const ROWS = ['species', 'level', 'wild', 'trainer', 'party', 'heal', 'atlas', 'close'];
 const TEST_PARTY = ['fenouvert', 'ondeclat', 'fournaise'];
 
 export class DebugMenuScene extends PromiseScene {
@@ -55,6 +56,8 @@ export class DebugMenuScene extends PromiseScene {
     } else if (row === 'heal') {
       healParty(this.state);
       this.message = 'Équipe soignée.';
+    } else if (row === 'atlas') {
+      this.manager.replace(new AtlasViewerScene());
     } else if (row === 'close') {
       this.done(null);
     }
@@ -86,10 +89,11 @@ export class DebugMenuScene extends PromiseScene {
       trainer: 'Dresseur IA',
       party: 'Équipe de test',
       heal: 'Soigner',
+      atlas: 'Atlas',
       close: 'Fermer',
     };
     ROWS.forEach((row, index) => {
-      const y = 20 + index * 13;
+      const y = 18 + index * 12;
       if (index === this.index) drawText(ctx, '▶', 8, y);
       drawText(ctx, labels[row], 16, y);
     });

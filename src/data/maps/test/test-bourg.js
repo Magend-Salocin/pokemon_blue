@@ -5,6 +5,7 @@ export default {
   tileset: 'town',
   music: 'town_1',
   border: 'T',
+  flyPoint: { x: 6, y: 6 },
   layers: {
     ground: [
       'TTTTTTTTTTTTTT',
@@ -21,14 +22,15 @@ export default {
       'TTTTT:::TTTTTT',
     ],
   },
-  structures: [{ type: 'house_a', x: 3, y: 2, width: 4, door: 1 }],
+  structures: [{ type: 'house_a', x: 3, y: 2, width: 4, door: 1 }, { type: 'halte', x: 8, y: 1, width: 4, door: 1 }],
   encounters: null,
-  warps: [{ x: 4, y: 4, to: 'test_maison', toX: 3, toY: 7 }],
+  warps: [{ x: 4, y: 4, to: 'test_maison', toX: 3, toY: 7 }, { x: 9, y: 3, to: 'test_halte', toX: 3, toY: 7 }],
   npcs: [
     { id: 'vieil_homme', sprite: 'vieil_homme', x: 9, y: 5, facing: 'down', movement: 'look', script: 'test_shoes' },
     { id: 'gamin', sprite: 'gamin', x: 3, y: 8, facing: 'down', movement: 'wander', radius: 2, script: [{ cmd: 'say', text: 'test_kid' }] },
     { id: 'testeur', sprite: 'scientifique', x: 11, y: 9, facing: 'left', movement: 'static', script: 'test_kit' },
-    { id: 'marcheur', sprite: 'randonneur', x: 8, y: 2, facing: 'right', movement: 'path', path: ['right', 'right', 'left', 'left'], script: [{ cmd: 'say', text: 'test_walker' }] },
+    { id: 'marcheur', sprite: 'randonneur', x: 8, y: 10, facing: 'right', movement: 'path', path: ['right', 'right', 'left', 'left'], script: [{ cmd: 'say', text: 'test_walker' }] },
+    { id: 'echangeur', sprite: 'marin', x: 2, y: 5, facing: 'right', movement: 'static', script: 'test_trade' },
   ],
   trainers: [],
   signs: [{ x: 10, y: 7, text: 'test_sign_bourg' }],
@@ -37,6 +39,13 @@ export default {
   triggers: [],
   connections: { north: null, south: 'test_route', east: null, west: null },
   scripts: {
+    test_trade: [
+      {
+        cmd: 'if_flag', flag: 'test_traded',
+        then: [{ cmd: 'say', text: 'test_trade_after' }],
+        else: [{ cmd: 'trade', wanted: 'pivelin', offer: { creature: 'noctule', level: 8, nickname: 'Pipistrou', originalTrainer: 'Marius' }, flag: 'test_traded' }],
+      },
+    ],
     test_shoes: [
       {
         cmd: 'if_flag', flag: 'test_got_shoes',
@@ -58,11 +67,20 @@ export default {
           { cmd: 'give_item', item: 'bouee', silent: true },
           { cmd: 'give_item', item: 'gants_de_force', silent: true },
           { cmd: 'give_item', item: 'repulsif', count: 3, silent: true },
+          { cmd: 'give_item', item: 'cerf_volant', silent: true },
+          { cmd: 'give_item', item: 'potion', count: 5, silent: true },
+          { cmd: 'give_item', item: 'pierre_lunaire', silent: true },
+          { cmd: 'give_item', item: 'sucre_dorge', count: 2, silent: true },
+          { cmd: 'give_item', item: 'fil_dariane', silent: true },
+          { cmd: 'give_item', item: 'capsule', count: 10, silent: true },
+          { cmd: 'set_flag', flag: 'has_bestiary' },
+          { cmd: 'give_badge', badge: 'ombre' },
           { cmd: 'give_badge', badge: 'eau' },
           { cmd: 'give_badge', badge: 'foudre' },
           { cmd: 'give_badge', badge: 'flore' },
           { cmd: 'give_badge', badge: 'vent' },
           { cmd: 'give_creature', creature: 'fenouillot', level: 5 },
+          { cmd: 'give_creature', creature: 'lumidanse', level: 20 },
           { cmd: 'say', text: 'test_kit_done' },
         ],
         no: [{ cmd: 'say', text: 'test_kit_no' }],

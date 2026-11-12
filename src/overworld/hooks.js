@@ -15,6 +15,18 @@ const defaults = {
   /** Starter choice. Resolves with a creature id. */
   chooseStarter: async () => 'fenouillot',
   healParty() {},
+  /**
+   * Saves the game; resolves true on success. Interim: browser storage. Prompt 12 replaces it
+   * with the atomic save file of the main process.
+   */
+  saveGame: async (state) => {
+    try {
+      localStorage.setItem('bestiora-save', JSON.stringify(state));
+      return true;
+    } catch {
+      return false;
+    }
+  },
 };
 
 export const hooks = { ...defaults };

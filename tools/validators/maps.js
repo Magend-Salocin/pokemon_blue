@@ -82,6 +82,7 @@ function checkEntities(map, data, label) {
   }
   for (const [name, commands] of Object.entries(map.scripts ?? {})) errors.push(...checkScript(commands, data, scope(`script ${name}`)));
 
+  if (map.flyPoint && !isStandable(map, map.flyPoint.x, map.flyPoint.y)) errors.push(`${label} : flyPoint bloquant ou hors de la carte`);
   for (const sign of map.signs ?? []) {
     inside(sign, 'panneau');
     if (data.texts[sign.text] === undefined) errors.push(`${label} : panneau ${at(sign)} texte inconnu « ${sign.text} »`);

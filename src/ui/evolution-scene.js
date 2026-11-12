@@ -6,6 +6,7 @@ import { drawSprite } from '../gfx/draw.js';
 import { getColor, getPaletteKey } from '../gfx/palette.js';
 import { evolveCreature, getSpecies, movesLearnedAt } from '../battle/logic/creature.js';
 import { hooks } from '../overworld/hooks.js';
+import { getGameState, markCaught } from '../state/game-state.js';
 import { creatureName } from './creature-widgets.js';
 import { learnMoveOutsideBattle, sayBattle } from './learn-move.js';
 import { PromiseScene } from './menu-cursor.js';
@@ -68,6 +69,7 @@ export class EvolutionScene extends PromiseScene {
       return;
     }
     evolveCreature(this.creature, this.targetId);
+    markCaught(getGameState(), this.targetId);
     this.phase = 'done';
     hooks.playSfx('evolution');
     await sayBattle(this.manager, 'evolution_done', { CREATURE: name, TARGET: getSpecies(this.targetId).name });

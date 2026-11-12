@@ -1,4 +1,7 @@
 // Global game state (pure data + small helpers). Serialized as-is by the save system (prompt 12).
+import { createStorage, storeCreature } from './storage.js';
+
+export const MAX_ITEM_COUNT = 99;
 
 export function createGameState(overrides = {}) {
   return {
@@ -7,7 +10,11 @@ export function createGameState(overrides = {}) {
     flags: {},
     bag: {},
     party: [],
-    storage: [],
+    storage: createStorage(),
+    daycare: null, // { creature, levelAtDeposit }
+    visitedTowns: [],
+    escapePoint: null, // { map, x, y } outside the current dungeon
+    playTime: 0, // seconds
     bestiary: { seen: {}, caught: {} },
     money: 3000,
     badges: [],
@@ -39,9 +46,14 @@ export const clearFlag = (state, flag) => {
 export const itemCount = (state, item) => state.bag[item] ?? 0;
 export const hasItem = (state, item, count = 1) => itemCount(state, item) >= count;
 
+/** Adds up to MAX_ITEM_COUNT; returns how many were actually added. */
 export function addItem(state, item, count = 1) {
-  state.bag[item] = itemCount(state, item) + count;
+  const added = Math.max(0, Math.min(count, MAX_ITEM_COUNT - itemCount(state, item)));
+  if (added > 0) state.bag[item] = itemCount(state, item) + added;
+  return added;
 }
+
+export const canAddItem = (state, item, count = 1) => itemCount(state, item) + count <= MAX_ITEM_COUNT;
 
 /** Removes up to `count` items; returns false (and changes nothing) if there are not enough. */
 export function removeItem(state, item, count = 1) {
@@ -64,7 +76,7 @@ export const PARTY_SIZE = 6;
 
 /**
  * Adds a creature instance (src/battle/logic/creature.js) to the party, or to the storage
- * when the party is full. Returns 'party' or 'storage'. Marks the species as caught.
+ * when the party is full. Returns 'party', 'storage' or 'full'. Marks the species as caught.
  */
 export function addCreature(state, creature) {
   markCaught(state, creature.species);
@@ -72,8 +84,7 @@ export function addCreature(state, creature) {
     state.party.push(creature);
     return 'party';
   }
-  state.storage.push(creature);
-  return 'storage';
+  return storeCreature(state.storage, creature) ? 'storage' : 'full';
 }
 
 /** Full HP, no status, full PP for every party creature. */

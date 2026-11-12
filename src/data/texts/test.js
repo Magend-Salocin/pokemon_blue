@@ -12,5 +12,6 @@ export default {
   test_trigger: 'Un coin poussiéreux… Ce message ne s’affiche qu’une fois.',
   test_gamin_intro: 'Hé ! Toi, là ! Mes bestioles veulent se battre !',
   test_gamin_defeat: 'Déjà fini ?',
+  test_trade_after: 'Pipistrou est entre de bonnes mains !',
   test_gamin_after: 'Je vais m’entraîner dans les herbes hautes.',
 };

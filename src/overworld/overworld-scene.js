@@ -28,6 +28,13 @@ import { createNpcBrain, updateNpc } from './npc.js';
 import { createScriptRunner } from './script-runner.js';
 import { computeCamera, createWorld, edgeOf, toNeighborCoordinates } from './world.js';
 import { renderWorld } from './world-renderer.js';
+import { daycareStep } from '../state/daycare.js';
+import { ListMenu } from '../ui/components/list-menu.js';
+import { withMenuLayer } from '../ui/components/menu-layer.js';
+import { say } from '../ui/messages.js';
+import { runTrade } from '../ui/services.js';
+import { openStartMenu } from '../ui/start-menu.js';
+import { openStorage } from '../ui/storage-menu.js';
 
 const TURN_FRAMES = 6;
 const BUMP_COOLDOWN = 0.3;
@@ -75,6 +82,7 @@ export class OverworldScene {
   // ---- Map loading -------------------------------------------------------
 
   onMapEntered() {
+    if (this.map.flyPoint && !this.state.visitedTowns.includes(this.map.id)) this.state.visitedTowns.push(this.map.id);
     this.spawnActors();
     this.updatePlayerSprite();
     this.savePosition();
@@ -197,6 +205,10 @@ export class OverworldScene {
       this.interact();
       return;
     }
+    if (input.justPressed('start')) {
+      this.runBusy(() => this.openStartMenu());
+      return;
+    }
     const direction = this.heldDirection(input);
     if (!direction) {
       this.chaining = false;
@@ -266,9 +278,11 @@ export class OverworldScene {
 
     const warp = (this.map.warps ?? []).find((entry) => entry.x === player.x && entry.y === player.y);
     if (warp) {
+      this.rememberEscapePoint(warp);
       this.runBusy(() => this.doWarp(warp.to, warp.toX, warp.toY));
       return;
     }
+    daycareStep(this.state);
     const trigger = this.triggerAt(player.x, player.y);
     if (trigger) {
       setFlag(this.state, this.triggerFlag(trigger));
@@ -374,7 +388,8 @@ export class OverworldScene {
     }
     const tile = map.metatileAt(front.x, front.y);
     if (!tile) return;
-    if (tile.cuttable) this.runBusy(() => this.fieldCut(front));
+    if (tile.id === 'storage_terminal') this.runBusy(() => openStorage(this.manager, this.state));
+    else if (tile.cuttable) this.runBusy(() => this.fieldCut(front));
     else if (tile.pushable) this.runBusy(() => this.fieldPush(front));
     else if (tile.climbable) this.runBusy(() => this.fieldClimb(front));
     else if (tile.water && !this.surfing) this.runBusy(() => this.fieldSurf());
@@ -620,6 +635,11 @@ export class OverworldScene {
       },
       openMenu: (menu, params) => hooks.openMenu(menu, params),
       getScript: (name) => this.getScript(name),
+      setRespawn: () => {
+        const { x, y } = this.player;
+        this.state.lastHalte = { map: this.map.id, x, y, facing: 'down' };
+      },
+      trade: (wanted, offer) => runTrade(this.manager, this.state, wanted, offer, this.rng),
       setRivalName: async () => {
         const name = await hooks.nameRival();
         if (name) this.state.rival.name = name;
@@ -631,6 +651,53 @@ export class OverworldScene {
       itemName: (id) => this.itemName(id),
       creatureName: (id) => this.creatureName(id),
     };
+  }
+
+  // ---- Start menu and map actions ------------------------------------------
+
+  /** Maps that count as dungeons for the Fil d'Ariane. */
+  isDungeon(map = this.map) {
+    return map.tileset === 'cave' || map.tileset === 'special' || Boolean(map.dungeon);
+  }
+
+  /** Entering a dungeon from outside: the Fil d'Ariane will lead back to this warp. */
+  rememberEscapePoint(warp) {
+    const target = getMapDefinition(warp.to);
+    const entering = !this.isDungeon() && (target.tileset === 'cave' || target.tileset === 'special' || target.dungeon);
+    if (entering) this.state.escapePoint = { map: this.map.id, x: warp.x, y: warp.y, facing: OPPOSITE[this.player.facing] };
+  }
+
+  fieldActions() {
+    return {
+      save: () => hooks.saveGame(this.state),
+      canFly: () => this.fieldStatus('fly') === 'ok' && !this.isDungeon() && this.state.visitedTowns.length > 0,
+      fly: () => this.chooseFlyDestination(),
+      canEscape: () => this.isDungeon() && Boolean(this.state.escapePoint),
+      escape: async () => {
+        const point = this.state.escapePoint;
+        this.state.escapePoint = null;
+        await this.doWarp(point.map, point.x, point.y, point.facing);
+      },
+    };
+  }
+
+  async openStartMenu() {
+    const action = await openStartMenu(this.manager, this.state, this.fieldActions());
+    if (action) await action();
+  }
+
+  async chooseFlyDestination() {
+    const towns = this.state.visitedTowns.map((id) => getMapDefinition(id));
+    if (towns.length === 0) {
+      await say(this.manager, 'fly_none');
+      return;
+    }
+    const index = await withMenuLayer(this.manager, (layer) =>
+      layer.open(new ListMenu(towns.map((town) => ({ label: town.name })), { x: 0, y: 0, width: 160, rows: Math.min(6, towns.length) })));
+    if (index === null) return;
+    const town = towns[index];
+    hooks.playSfx('fly');
+    await this.doWarp(town.id, town.flyPoint.x, town.flyPoint.y, 'down');
   }
 
   // ---- Render ------------------------------------------------------------

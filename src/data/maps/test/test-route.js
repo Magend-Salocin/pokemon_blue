@@ -39,7 +39,9 @@ export default {
     water: [{ creature: 'goujonet', minLevel: 10, maxLevel: 12, weight: 1 }],
   },
   warps: [{ x: 6, y: 16, to: 'test_grotte', toX: 5, toY: 10 }],
-  npcs: [],
+  npcs: [
+    { id: 'pensionnaire', sprite: 'vieille_dame', x: 10, y: 3, facing: 'down', movement: 'static', script: [{ cmd: 'open_menu', menu: 'daycare' }] },
+  ],
   trainers: [{ id: 'test_gamin', sprite: 'gamin', x: 11, y: 7, facing: 'left', sight: 4, trainer: 'test_gamin' }],
   signs: [],
   items: [{ x: 9, y: 5, item: 'capsule', flag: 'item_test_route_1' }],
