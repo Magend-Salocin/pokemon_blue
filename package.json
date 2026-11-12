@@ -14,7 +14,8 @@
     "validate": "node tools/validate-data.js",
     "dist": "node tools/not-implemented.js dist",
     "bestiary": "node tools/export-bestiary-md.js",
-    "map-preview": "node tools/map-preview.js"
+    "map-preview": "node tools/map-preview.js",
+    "simulate": "node tools/simulate-battle.js"
   },
   "repository": {
     "type": "git",

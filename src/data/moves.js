@@ -54,7 +54,7 @@ export const MOVES = [
   move('escarbille', 'Escarbille', 'feu', S, 40, 100, 25, 'Des escarbilles. Peut brûler.', { effect: 'burn', chance: 10 }),
   move('morsardente', 'Morsardente', 'feu', P, 60, 95, 20, 'Morsure brûlante. Peut brûler.', { effect: 'burn', chance: 10 }),
   move('torche', 'Torche', 'feu', P, 70, 100, 15, 'Frappe avec une torche en feu.'),
-  move('cerceau_feu', 'Cerceau Feu', 'feu', S, 35, 85, 15, 'Piège la cible dans un feu.', { effect: 'trap', params: { turns: [4, 5] } }),
+  move('cerceau_feu', 'Cerceau Feu', 'feu', S, 35, 85, 15, 'Piège la cible dans un feu.', { effect: 'trap', params: { turns: [2, 5] } }),
   move('boule_braise', 'Boule Braise', 'feu', S, 75, 100, 15, 'Boule de braise. Peut brûler.', { effect: 'burn', chance: 10 }),
   move('coulee_lave', 'Coulée Lave', 'feu', S, 95, 100, 10, 'Vague de lave. Peut brûler.', { effect: 'burn', chance: 10 }),
   move('pyroclaste', 'Pyroclaste', 'feu', S, 110, 85, 5, 'Roches en feu. Brûle souvent.', { effect: 'burn', chance: 30 }),
@@ -65,7 +65,7 @@ export const MOVES = [
   // Eau
   move('giclee', 'Giclée', 'eau', S, 40, 100, 25, 'Asperge la cible d’un jet d’eau.'),
   move('nageoire', 'Nageoire', 'eau', P, 60, 100, 20, 'Gifle d’un coup de nageoire.'),
-  move('remous', 'Remous', 'eau', S, 35, 85, 15, 'Piège la cible dans un remous.', { effect: 'trap', params: { turns: [4, 5] } }),
+  move('remous', 'Remous', 'eau', S, 35, 85, 15, 'Piège la cible dans un remous.', { effect: 'trap', params: { turns: [2, 5] } }),
   move('embrun', 'Embrun', 'eau', S, 65, 100, 20, 'Embruns salés. Peut aveugler.', { effect: 'target_stat_down', chance: 30, params: stats({ acc: -1 }) }),
   move('abysse', 'Abysse', 'eau', P, 80, 100, 10, 'Plonge au tour 1, surgit au tour 2.', { effect: 'charge_turn', params: { semiInvulnerable: 'underwater' } }),
   move('deferlante', 'Déferlante', 'eau', P, 90, 100, 15, 'Se jette sur la cible en vague.'),

@@ -8,7 +8,7 @@ Chaque session d'implémentation ajoute une entrée en bas de ce fichier : promp
 | 02 Graphismes et atlas | fait |
 | 03 Données de jeu | fait |
 | 04 Moteur de carte | fait |
-| 05 Logique de combat | à faire |
+| 05 Logique de combat | fait |
 | 06 Interface de combat | à faire |
 | 07 Menus et systèmes | à faire |
 | 08 Audio | à faire |
@@ -146,6 +146,82 @@ Décisions
 - Personnages dessinés 4 px au-dessus de leur case ; l'herbe haute recouvre leurs 6 derniers pixels.
 - `window.debugGame` exposé en mode dev uniquement (scènes, overworld, état) pour le débogage et les tests pilotés.
 - Les cartes hors écran à l'intérieur (plus petites que l'écran) sont centrées sur fond noir ; `border` sert aux cartes extérieures.
+
+Problèmes connus
+- Aucun.
+
+### 2026-11-12 : prompt 05, moteur de combat pur et IA
+
+Fait
+- `src/battle/logic/` (aucun import de `gfx`, `ui`, `overworld` ni du DOM, vérifié par un test) :
+  - `creature.js` : `createCreature(speciesId, level, rng, options)`, `recalculateStats`, `defaultMoves` (4 dernières attaques du learnset), `evolveCreature`.
+  - `battle-state.js` : état sérialisable `{ kind, trainer, turn, sides: [joueur, ennemi], runAttempts, outcome, pending, participants, leveledUp }` ; chaque côté `{ party, active, stages (−6 à +6), volatile, screens, potionsUsed }`.
+  - `damage.js` (formule de la section 5, STAB, critique, aléa, paliers de précision et d'esquive), `status.js` (altérations et fin de tour), `effects/` (un module par famille : `damage`, `status`, `stats`, `support` ; les 36 effets), `capture.js`, `experience.js`, `items.js`, `ai.js`, `engine.js`.
+- API du moteur : `createBattle(config)`, `battleStartEvents(state)`, `getAvailableActions(state, side)`, `resolveTurn(state, playerAction, enemyAction, rng)` → `{ state, events }`, `answerLearnMove(state, slot | null)`, `chooseSwitch(state, index)`, `currentPending(state)`. L'état reçu n'est jamais modifié (copie par `structuredClone`).
+- IA : `chooseAction(state, side, rng, level?)`, `chooseReplacement`, `aiLevel(state)` : `wild`, `basic`, ou `smart` pour champions, Gardiens et Corvin (surchargeable par `trainer.ai`).
+- `npm run simulate -- --seed 42` (`tools/simulate-battle.js`) : deux équipes IA, journal lisible, reproductible. Options `--player` et `--enemy` (`espece:niveau,…`), `--ai`, `--player-ai`, `--kind`.
+- Tests : 81 tests de combat (dégâts calculés à la main, chaque effet, chaque altération, ordre du tour, capture à seed fixe, fuite, XP sur plusieurs niveaux, apprentissage, fin de combat, objets, IA, Lutte, couverture des effets, pureté des imports). 176 tests au total.
+
+Contrat des événements
+Chaque événement est un objet `{ type, ... }`, dans l'ordre d'affichage. `side` vaut 0 (joueur) ou 1 (ennemi) ; `index` est un indice dans l'équipe de ce côté. Aucun texte formaté : seulement des ids (`move`, `species`, `item`, `status`) et des nombres.
+
+| type | Champs | Sens |
+|---|---|---|
+| `switch_in` | side, index, species, level, hp, maxHp | Une bestiole entre (début, changement, remplacement) |
+| `switch_out` | side, index | Une bestiole encore debout revient |
+| `move_used` | side, move | Annonce de l'attaque |
+| `move_failed` | side, move, reason | `no_effect`, `hp_full`, `target_awake`, `level_too_low`, `nothing_to_counter`, `no_target` |
+| `charging` | side, move, semiInvulnerable | 1er tour d'une attaque en 2 tours |
+| `miss` | side, move | L'attaque rate |
+| `protected` | side | La cible se protège |
+| `damage` | side, amount, hp, maxHp, source, move? | `source` : `move`, `recoil`, `struggle`, `self_destruct`, `confusion`, `trap`, `leech` |
+| `critical` | side | Coup critique sur ce côté (après le `damage`) |
+| `effectiveness` | side, value | 0, 0,25, 0,5, 2 ou 4 (absent si ×1) |
+| `hits` | count | Nombre de coups d'une attaque multiple |
+| `ohko` | side | K.O. en un coup |
+| `heal` | side, amount, hp, maxHp, source, index? | `move`, `drain`, `leech`, `item` |
+| `status_applied` | side, status, badly, rest? | `brl`, `psn` (`badly` = grave), `par`, `som`, `gel` |
+| `status_cured` | side, status, reason, index? | `wake`, `thaw`, `rest`, `item` |
+| `status_prevented` | side, reason | `asleep`, `frozen`, `paralyzed`, `flinch`, `recharging` |
+| `status_damage` | side, status, amount, hp, maxHp | Brûlure ou poison en fin de tour |
+| `confused` | side | Annonce de la confusion avant d'agir |
+| `confusion_hit` | side | Se blesse dans sa confusion (suivi d'un `damage`) |
+| `volatile_applied`, `volatile_ended` | side, volatile, move? | `confusion`, `leech`, `trap`, `focus`, `protect` |
+| `stat_change` | side, stat, delta, stage, blocked | `blocked: true` quand le palier est déjà à ±6 |
+| `stats_reset` | - | Grand Air |
+| `screen_up`, `screen_down` | side, category | `physical` ou `special` |
+| `faint` | side, index, species | K.O. |
+| `need_switch` | side | Le joueur doit choisir une bestiole (`chooseSwitch`) |
+| `item_used` | side, item, target | Objet consommé (l'appelant le retire du sac) |
+| `item_failed` | side, item, target?, reason | Objet non consommé : `hp_full`, `no_status`, `wrong_status`, `not_fainted`, `fainted`, `pp_full`, `no_target`, `unusable` |
+| `revive`, `pp_restored` | side, index, … | Effets d'objets |
+| `capture_blocked` | item | Capsule contre un dresseur (non consommée) |
+| `capture_shake` | count | Secousse 1 à 3 |
+| `capture_success`, `capture_fail` | species, index / shakes | Résultat de la capture |
+| `run_success`, `run_fail`, `run_blocked` | reason? | Fuite (`trainer`, `trapped`) |
+| `exp_gain` | side, index, amount | XP gagnée |
+| `level_up` | side, index, level, stats, previousStats | Montée de niveau |
+| `move_learned` | side, index, move | Appris directement (moins de 4 attaques) |
+| `learn_move_prompt` | side, index, move | Choix du joueur : l'UI met la lecture en pause et appelle `answerLearnMove` |
+| `move_forgotten`, `move_not_learned` | side, index, move, oldMove? | Réponse à `answerLearnMove` |
+| `evolution_pending` | side, index, species, target | À appliquer après le combat avec `evolveCreature` |
+| `money_gain` | amount | Victoire contre un dresseur : niveau max × `moneyBase` |
+| `battle_end` | outcome | `win`, `lose`, `caught`, `fled` |
+
+Décisions
+- Ordre du tour : fuite, puis changements et objets (joueur d'abord), puis priorité, puis vitesse (paralysie ÷ 4), égalité au hasard.
+- Fin de tour, ordre fixe : côté joueur puis côté ennemi ; pour chaque côté brûlure ou poison, piège, vampirisme. Ensuite peur et protection sont effacées et les écrans décomptés.
+- Sommeil 1 à 3 tours (Sieste : 2) ; au réveil, la bestiole agit. Gel : 20 % de dégel avant d'agir, ou dégel si touchée par une attaque Feu. Paralysie : 25 % d'échec. Confusion 1 à 4 tours, 1/3 de chances de se frapper (puissance 40, sans type). Poison grave : n/16 croissant, remis à 1 au changement. Piège 2 à 5 tours, 1/8 par tour (Cerceau Feu et Remous passent de [4, 5] à [2, 5]).
+- Immunités de statut : Feu (brûlure), Givre (gel), Toxique et Métal (poison), Foudre (paralysie) ; Flore insensible à Germe Voleur.
+- Ajouts au game design : brûlure = dégâts physiques ÷ 2 ; écrans = dégâts ÷ 2 sauf critique ; un critique ignore les baisses de l'attaquant et les hausses du défenseur.
+- XP : floor(baseExp × niveau / 7), ×1,5 contre un dresseur, partagée entre les participants encore debout. Points d'entraînement de l'espèce battue à chaque participant (plafond 255). +3 d'amitié par niveau gagné.
+- Fuite : floor(vitesse × 128 / vitesse sauvage) + 30 × tentatives précédentes, sur 256.
+- Lutte : Baroud (Normal, puissance 50), recul de 1/4 des PV max du lanceur.
+- IA `smart` : Grande Potion sous 25 % de PV (2 par combat et par côté) ; change de bestiole si elle est menacée à ×2 et ne peut pas infliger 30 % des PV adverses, vers un remplaçant qui ne craint pas les types adverses.
+
+Reste
+- L'équipe du joueur dans `game-state.js` (`{ creature, level }` créé par `give_creature`) n'utilise pas encore `createCreature` : à brancher avec l'interface de combat (prompt 06).
+- Équilibrage fin (puissances, learnsets) à faire avec le simulateur.
 
 Problèmes connus
 - Aucun.
