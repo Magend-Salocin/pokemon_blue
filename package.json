@@ -11,8 +11,9 @@
     "dev": "electron . --dev",
     "test": "node --test tests/*.test.js",
     "atlas": "node tools/build-atlas.js",
-    "validate": "node tools/not-implemented.js validate",
-    "dist": "node tools/not-implemented.js dist"
+    "validate": "node tools/validate-data.js",
+    "dist": "node tools/not-implemented.js dist",
+    "bestiary": "node tools/export-bestiary-md.js"
   },
   "repository": {
     "type": "git",

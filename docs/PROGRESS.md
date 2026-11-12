@@ -6,7 +6,7 @@ Chaque session d'implémentation ajoute une entrée en bas de ce fichier : promp
 |---|---|
 | 01 Socle Electron et moteur | fait |
 | 02 Graphismes et atlas | fait |
-| 03 Données de jeu | à faire |
+| 03 Données de jeu | fait |
 | 04 Moteur de carte | à faire |
 | 05 Logique de combat | à faire |
 | 06 Interface de combat | à faire |
@@ -87,3 +87,34 @@ Décisions
 
 Problèmes connus
 - Certaines combinaisons générateur peu probables masquent la caractéristique (coquille derrière un fantôme, nageoires derrière les bras d'un golem). À éviter dans les specs du prompt 03.
+
+### 2026-11-12 : prompt 03, données de types, attaques, bestioles et objets
+
+Fait
+- `src/data/types.js` : 15 types, icônes `type/<id>`, table commentée relation par relation, `getTypeMultiplier`, `getEffectiveness`. 4 immunités (Normal → Ombre, Foudre → Terre, Toxique → Métal, Terre → Vent), soldes entre −2 et +3.
+- `src/data/move-effects.js` : 36 effets fermés, tous utilisés. `src/data/moves.js` : 166 attaques (160 apprenables, 34 de statut, 8 offensives ou plus par type, 6 signatures `exclusiveTo` pour les légendaires et le mythique, `baroud` en `learnable: false` pour le moteur).
+- `src/data/creatures.js` : 150 bestioles, `HABITATS`, `CREATURES_BY_ID`. 18 lignées à 3 stades (dont les starters), 34 à 2 stades, 1 lignée à embranchement (Cocolet → Cocomarin / Cocorage par pierre), 20 bestioles sans évolution, 4 légendaires et 1 mythique. Les 5 pierres et 1 évolution par amitié (Toisonnet) sont utilisées.
+- `src/data/items.js` (44 objets, effets fermés `ITEM_EFFECTS`), `src/data/trainer-classes.js` (30 classes), `src/data/formulas.js` (stats, `expForLevel`, `levelForExp`).
+- `npm run validate` (`tools/validate-data.js`) : vérificateurs indépendants dans `tools/validators/` (ids, types, attaques, bestioles, évolutions, objets, classes, textes), enregistrés dans `tools/validators/index.js`. `tools/forbidden-words.js` : comparaison sans casse ni accents, par mot ou expression entière.
+- `npm run bestiary` (`tools/export-bestiary-md.js`) génère `docs/BESTIAIRE.md`.
+- Atlas régénéré depuis `src/data/creatures.js` : 136 bestioles générées, 14 dessinées. Planche relue face et dos dans l'ordre des numéros : aucun sprite vide ni cassé. Graines de Cristelan et Névéon changées (corps trop sombre pour des bestioles de neige).
+- Tests : types (relations connues, contraintes de la section 5), formules de stats et d'XP calculées à la main, évolutions (cycle, niveau décroissant), validateur complet. 77 tests.
+
+Reste
+- Les learnsets ont été générés une fois (même logique pour toutes les espèces : attaques du type réparties du niveau 1 aux 50, attaques Normal selon la puissance, 3 attaques de statut), puis figés dans `creatures.js`. À retoucher à la main si l'équilibrage du prompt 05 le demande.
+- La planche a été vérifiée sur le PNG de l'atlas, pas dans la visionneuse Electron.
+
+Décisions
+- Seul `GAME_DESIGN.md` fait foi pour les bestioles : `docs/Pokedex/` (bestiaire folklorique) est ignoré à la demande de l'utilisateur.
+- Répartition : « 15 / 30 / 15 lignées » donne 120 bestioles, pas 150. Retenu : 18 lignées à 3 stades, 34 à 2 stades, 1 embranchement, 20 isolées, 5 légendaires et mythique (78 lignées).
+- Champ ajouté `minLevel` sur chaque bestiole : plus bas niveau de rencontre (sauvage ou par évolution). Le validateur s'en sert pour « 4 attaques au niveau de rencontre » ; les tables de rencontres (prompts 09 à 11) doivent le respecter.
+- Formules d'XP dans `src/data/formulas.js` (le prompt) au lieu de `src/battle/logic/experience.js` (game design) : rapide `4n³/5`, moyenne `n³`, lente `5n³/4`.
+- `power: 0` pour les attaques à dégâts calculés (fixes, niveau, moitié des PV, K.O. direct, riposte). `accuracy: null` = ne rate jamais, `effectChance: null` = effet systématique.
+- Légendaires et mythique : numéros 146 à 150, `catchRate` 3, totaux 590 à 680.
+- Noms d'objets : les noms français trop marqués d'une franchise existante cités dans le prompt sont remplacés et ajoutés aux mots interdits : Potion Forte, Grande Potion, Potion Totale, Ranimant, Ranimant Max, Panacée, Infusion, Grande Infusion, Sucre d'Orge, Fil d'Ariane, Baume Froid, Dégivrant, Sel d'Éveil, Liniment. Capsule, Potion, Antidote, Répulsif et les pierres du game design sont gardés.
+- Noms de bestioles écartés car trop proches d'espèces existantes : Coconet, Larvelle, Lumivelle, Miasmet, Chandelor, Cabrisson (remplacés par Nymphot, Feuillarve, Lumidanse, Pestelet, Lustrombre, Bouquetor).
+- Limites d'affichage : nom d'attaque 12, nom de bestiole 10, catégorie 18, nom d'objet 17 (« Capsule Maîtresse »), nom de classe 12 ; descriptions d'attaque 2 lignes, de bestiole et d'objet 3 lignes de 18. Les caractères doivent exister dans la police : pas de majuscules Â, Ê, Î, Ô (attaques « Âcre » renommées « Fiel »).
+- Classes de dresseurs : `portrait: null` pour champion·ne et gardien·ne (portrait propre à chaque dresseur), `name: ''` pour le rival. Corvin a la classe `fondateur_opale`.
+
+Problèmes connus
+- Aucun.
