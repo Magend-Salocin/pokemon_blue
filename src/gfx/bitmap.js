@@ -30,11 +30,3 @@ export function paintRows(imageData, rows, originX, originY, resolveColor) {
     }
   }
 }
-
-export function mirrorHorizontal(rows) {
-  return rows.map((row) => [...row].reverse().join(''));
-}
-
-export function mirrorVertical(rows) {
-  return [...rows].reverse();
-}

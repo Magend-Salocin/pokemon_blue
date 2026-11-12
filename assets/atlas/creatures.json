@@ -1,0 +1,466 @@
+{
+  "frames": {
+    "azurel/back": {
+      "x": 0,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "azurel/front": {
+      "x": 49,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "braisille/back": {
+      "x": 98,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "braisille/front": {
+      "x": 147,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_01/back": {
+      "x": 196,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_01/front": {
+      "x": 245,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_02/back": {
+      "x": 294,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_02/front": {
+      "x": 343,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_03/back": {
+      "x": 0,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_03/front": {
+      "x": 49,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_04/back": {
+      "x": 98,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_04/front": {
+      "x": 147,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_05/back": {
+      "x": 196,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_05/front": {
+      "x": 245,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_06/back": {
+      "x": 294,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_06/front": {
+      "x": 343,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_07/back": {
+      "x": 0,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_07/front": {
+      "x": 49,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_08/back": {
+      "x": 98,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_08/front": {
+      "x": 147,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_09/back": {
+      "x": 196,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_09/front": {
+      "x": 245,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_10/back": {
+      "x": 294,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_10/front": {
+      "x": 343,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_11/back": {
+      "x": 0,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_11/front": {
+      "x": 49,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_12/back": {
+      "x": 98,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_12/front": {
+      "x": 147,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_13/back": {
+      "x": 196,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_13/front": {
+      "x": 245,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_14/back": {
+      "x": 294,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_14/front": {
+      "x": 343,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_15/back": {
+      "x": 0,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_15/front": {
+      "x": 49,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_16/back": {
+      "x": 98,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_16/front": {
+      "x": 147,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_17/back": {
+      "x": 196,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_17/front": {
+      "x": 245,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_18/back": {
+      "x": 294,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_18/front": {
+      "x": 343,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_19/back": {
+      "x": 0,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_19/front": {
+      "x": 49,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_20/back": {
+      "x": 98,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "exemple_20/front": {
+      "x": 147,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "fenouillot/back": {
+      "x": 196,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "fenouillot/front": {
+      "x": 245,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "fenouvert/back": {
+      "x": 294,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "fenouvert/front": {
+      "x": 343,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "flaquin/back": {
+      "x": 0,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "flaquin/front": {
+      "x": 49,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "fournaise/back": {
+      "x": 98,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "fournaise/front": {
+      "x": 147,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "fulgorine/back": {
+      "x": 196,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "fulgorine/front": {
+      "x": 245,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "glacerne/back": {
+      "x": 294,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "glacerne/front": {
+      "x": 343,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "marevor/back": {
+      "x": 0,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "marevor/front": {
+      "x": 49,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "mirelle/back": {
+      "x": 98,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "mirelle/front": {
+      "x": 147,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "ondeclat/back": {
+      "x": 196,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "ondeclat/front": {
+      "x": 245,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "pyrogrue/back": {
+      "x": 294,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "pyrogrue/front": {
+      "x": 343,
+      "y": 343,
+      "w": 48,
+      "h": 48
+    },
+    "sylvenard/back": {
+      "x": 0,
+      "y": 392,
+      "w": 48,
+      "h": 48
+    },
+    "sylvenard/front": {
+      "x": 49,
+      "y": 392,
+      "w": 48,
+      "h": 48
+    },
+    "volcarde/back": {
+      "x": 98,
+      "y": 392,
+      "w": 48,
+      "h": 48
+    },
+    "volcarde/front": {
+      "x": 147,
+      "y": 392,
+      "w": 48,
+      "h": 48
+    }
+  },
+  "meta": {
+    "version": 1,
+    "image": "creatures.png",
+    "size": {
+      "w": 416,
+      "h": 440
+    },
+    "levels": [
+      "#ffffff",
+      "#aaaaaa",
+      "#555555",
+      "#000000"
+    ],
+    "pngHash": "af88c00237a04cc1e1c2350fd65ce8666107376e0af2d77d539b5d5c0199e3f6",
+    "source": "tools/sample-creatures.js",
+    "generated": [
+      "exemple_01",
+      "exemple_02",
+      "exemple_03",
+      "exemple_04",
+      "exemple_05",
+      "exemple_06",
+      "exemple_07",
+      "exemple_08",
+      "exemple_09",
+      "exemple_10",
+      "exemple_11",
+      "exemple_12",
+      "exemple_13",
+      "exemple_14",
+      "exemple_15",
+      "exemple_16",
+      "exemple_17",
+      "exemple_18",
+      "exemple_19",
+      "exemple_20"
+    ],
+    "handDrawn": [
+      "fenouillot",
+      "fenouvert",
+      "sylvenard",
+      "braisille",
+      "fournaise",
+      "pyrogrue",
+      "flaquin",
+      "ondeclat",
+      "marevor",
+      "azurel",
+      "glacerne",
+      "volcarde",
+      "fulgorine",
+      "mirelle"
+    ]
+  }
+}

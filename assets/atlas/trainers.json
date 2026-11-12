@@ -1,0 +1,265 @@
+{
+  "frames": {
+    "back/joueur": {
+      "x": 0,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "back/joueuse": {
+      "x": 49,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/aubin": {
+      "x": 98,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/brune": {
+      "x": 147,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/campeur": {
+      "x": 196,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/campeuse": {
+      "x": 245,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/chercheuse": {
+      "x": 0,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/corvin": {
+      "x": 49,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/dame": {
+      "x": 98,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/danseuse": {
+      "x": 147,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/dresseur": {
+      "x": 196,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/dresseuse": {
+      "x": 245,
+      "y": 49,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/ecolier": {
+      "x": 0,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/fillette": {
+      "x": 49,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/gamin": {
+      "x": 98,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/garance": {
+      "x": 147,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/gardien_1": {
+      "x": 196,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/gardien_2": {
+      "x": 245,
+      "y": 98,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/gardien_3": {
+      "x": 0,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/gardien_4": {
+      "x": 49,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/gentleman": {
+      "x": 98,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/lazare": {
+      "x": 147,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/mael": {
+      "x": 196,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/marin": {
+      "x": 245,
+      "y": 147,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/montagnard": {
+      "x": 0,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/motard": {
+      "x": 49,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/mystique": {
+      "x": 98,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/nageur": {
+      "x": 147,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/nageuse": {
+      "x": 196,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/oswin": {
+      "x": 245,
+      "y": 196,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/ouvrier": {
+      "x": 0,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/pecheur": {
+      "x": 49,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/professeure": {
+      "x": 98,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/randonneur": {
+      "x": 147,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/randonneuse": {
+      "x": 196,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/rival": {
+      "x": 245,
+      "y": 245,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/sbire_opale": {
+      "x": 0,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/sbire_opale_f": {
+      "x": 49,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/scientifique": {
+      "x": 98,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/selene": {
+      "x": 147,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    },
+    "portrait/ysolde": {
+      "x": 196,
+      "y": 294,
+      "w": 48,
+      "h": 48
+    }
+  },
+  "meta": {
+    "version": 1,
+    "image": "trainers.png",
+    "size": {
+      "w": 320,
+      "h": 342
+    },
+    "levels": [
+      "#ffffff",
+      "#aaaaaa",
+      "#555555",
+      "#000000"
+    ],
+    "pngHash": "ff92a111283e847b762bf07e487d60a1ff2c83917987d7ddf3217f15dcbccd81"
+  }
+}

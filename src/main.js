@@ -2,8 +2,10 @@ import { createInput } from './engine/input.js';
 import { attachFocusPause, createLoop } from './engine/loop.js';
 import { createRenderer } from './engine/renderer.js';
 import { createSceneManager } from './engine/scene-manager.js';
+import { loadAtlases } from './gfx/atlas.js';
 import { cyclePalette } from './gfx/palette.js';
 import { DemoScene } from './demo/demo-scene.js';
+import { LoadingScene } from './ui/loading-scene.js';
 
 const renderer = createRenderer(document.getElementById('screen'));
 const input = createInput();
@@ -28,6 +30,17 @@ const loop = createLoop({
   },
 });
 
+async function boot() {
+  const loading = scenes.push(new LoadingScene());
+  try {
+    await loadAtlases((loaded, total) => loading.setProgress(loaded, total));
+    scenes.replace(new DemoScene());
+  } catch (error) {
+    loading.error = error.message;
+    throw error;
+  }
+}
+
 attachFocusPause(loop);
-scenes.push(new DemoScene());
 loop.start();
+boot();

@@ -1,6 +1,7 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../engine/constants.js';
 import { GLYPH_HP, GLYPH_LEVEL, drawText, measureText } from '../gfx/font.js';
 import { getActivePalette, getColor } from '../gfx/palette.js';
+import { AtlasViewerScene } from '../debug/atlas-viewer-scene.js';
 import { askYesNo } from '../ui/dialog-box.js';
 import { drawWindowFrame } from '../ui/window-frame.js';
 
@@ -41,7 +42,9 @@ export class DemoScene {
   }
 
   update(dt, input) {
-    if (!this.running && input.justPressed('a')) this.runDemo();
+    if (this.running) return;
+    if (input.justPressed('a')) this.runDemo();
+    else if (input.justPressed('select') && !input.isDown('start')) this.manager.push(new AtlasViewerScene());
   }
 
   render(ctx) {
@@ -61,7 +64,7 @@ export class DemoScene {
     }
     if (!this.running) {
       drawWindowFrame(ctx, 0, 96, SCREEN_WIDTH, 48);
-      drawText(ctx, 'A : relancer', 8, 108);
+      drawText(ctx, 'A:démo SEL:atlas', 8, 108);
       drawText(ctx, 'SEL+START: palette', 8, 124);
     }
   }
