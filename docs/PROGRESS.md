@@ -7,7 +7,7 @@ Chaque session d'implémentation ajoute une entrée en bas de ce fichier : promp
 | 01 Socle Electron et moteur | fait |
 | 02 Graphismes et atlas | fait |
 | 03 Données de jeu | fait |
-| 04 Moteur de carte | à faire |
+| 04 Moteur de carte | fait |
 | 05 Logique de combat | à faire |
 | 06 Interface de combat | à faire |
 | 07 Menus et systèmes | à faire |
@@ -115,6 +115,37 @@ Décisions
 - Noms de bestioles écartés car trop proches d'espèces existantes : Coconet, Larvelle, Lumivelle, Miasmet, Chandelor, Cabrisson (remplacés par Nymphot, Feuillarve, Lumidanse, Pestelet, Lustrombre, Bouquetor).
 - Limites d'affichage : nom d'attaque 12, nom de bestiole 10, catégorie 18, nom d'objet 17 (« Capsule Maîtresse »), nom de classe 12 ; descriptions d'attaque 2 lignes, de bestiole et d'objet 3 lignes de 18. Les caractères doivent exister dans la police : pas de majuscules Â, Ê, Î, Ô (attaques « Âcre » renommées « Fiel »).
 - Classes de dresseurs : `portrait: null` pour champion·ne et gardien·ne (portrait propre à chaque dresseur), `name: ''` pour le rival. Corvin a la classe `fondateur_opale`.
+
+Problèmes connus
+- Aucun.
+
+### 2026-11-12 : prompt 04, moteur de carte, PNJ, dresseurs et scripts
+
+Fait
+- Format de carte documenté dans `docs/MAP_FORMAT.md` : couches en chaînes avec légende par tileset (complétée par carte), motifs 2 × 2 (arbres, tables), `structures` pour les bâtiments, couche `collision` optionnelle (`.` `#` `_`), entités, connexions, rencontres, scripts.
+- Modules purs (`src/overworld/`) : `map-loader.js` (légende → métatuiles, drapeaux résolus depuis `tiles.json`), `collision.js` (pas, corniches, eau, bords, ligne de vue), `world.js` (cartes connectées, caméra), `encounters.js`, `actor.js`, `npc.js`, `script-runner.js` (31 commandes, dont `give_badge` en plus de la liste du prompt). `src/state/game-state.js` : drapeaux, sac, équipe, argent, badges, position, Répulsif.
+- Scène `OverworldScene` : déplacement case par case (16 frames, course ×2 avec B et les Chaussures), pivot sur appui bref, glace, corniches avec arc et ombre, herbe haute sur les pieds, tuiles animées, grottes sombres, connexions sans transition, warps avec fondu et pas de sortie, PNJ (4 mouvements), panneaux, objets visibles et cachés, déclencheurs, objets de terrain (coupe, poussée, Grappin, surf), dresseurs (« ! », approche, dialogue, combat, drapeau `trainer_<id>`), rencontres sauvages avec Répulsif, transition de combat (3 flashs puis bandes alternées), écran de combat provisoire qui renvoie une victoire.
+- Hooks (`src/overworld/hooks.js`) pour l'audio, les combats, les menus, le nom du rival et le choix du starter.
+- Données : `src/data/texts/` (table de textes), `src/data/trainers.js` (stub, 1 dresseur de test), `src/data/scripts.js` (scripts globaux), `src/data/field-abilities.js` (objet et badge requis), objet clé `chaussures`.
+- 4 cartes de test (`src/data/maps/test/`) : bourg, route, maison, grotte sombre. Le jeu démarre dessus avec `npm run dev` ; un PNJ « testeur » donne les objets de terrain, des badges et un Fenouillot.
+- Validateur : cartes (couches, légende, métatuiles, warps, connexions réciproques et bords de même taille, entités, rencontres au-dessus du `minLevel` des espèces), scripts (commandes, champs, références), dresseurs, textes de dialogue. `npm run map-preview` (`tools/map-preview.js`) exporte les cartes en PNG dans `out/maps/`.
+- Tests : collisions, corniches, eau, ligne de vue, légende et structures, connexions, caméra, rencontres, script runner avec faux contexte, cas d'erreur du validateur. 95 tests.
+- Vérifié dans Electron en pilotant le jeu (Playwright, hors dépôt) : déplacement, entrée et sortie de la maison, déclencheur unique, passage bourg → route sans transition, saut de corniche, coupe, poussée, Grappin dans les deux sens, surf et descente de la Bouée, ramassage d'objets visibles et cachés, dresseur qui repère et combat, rencontre sauvage, grotte sombre et éclairée, glissade sur la glace, échelle de sortie. Aucune erreur dans la console.
+
+Reste
+- Course avec B, PNJ en mode `path` et effet de transition vérifiés seulement par le code et des captures ponctuelles, pas par un test automatisé.
+- `startBattle` et `startWildBattle` restent provisoires jusqu'aux prompts 05 et 06. Le texte de défaite du dresseur sera affiché par le vrai combat.
+- Menu Start, menu debug F1 : prompt 07.
+
+Décisions
+- `encounters.rate` est un pourcentage par pas (8 ≈ game design). Table `cave` : toute tuile praticable de la carte.
+- Warp : déclenché à l'arrivée sur la case, jamais en y apparaissant. Le pas de sortie suit l'orientation du joueur à l'entrée, ce qui fonctionne pour les portes, paillassons et escaliers sans champ supplémentaire.
+- Les PNJ de la carte voisine n'apparaissent qu'une fois la connexion franchie.
+- Arbustes coupés et rochers poussés reviennent au rechargement de la carte (pas de persistance).
+- Badges requis : Machette → Eau, Lanterne → Foudre, Grappin → Flore, Bouée et Gants de Force → Vent, Cerf-volant → Ombre (dates d'obtention de la section 4).
+- Personnages dessinés 4 px au-dessus de leur case ; l'herbe haute recouvre leurs 6 derniers pixels.
+- `window.debugGame` exposé en mode dev uniquement (scènes, overworld, état) pour le débogage et les tests pilotés.
+- Les cartes hors écran à l'intérieur (plus petites que l'écran) sont centrées sur fond noir ; `border` sert aux cartes extérieures.
 
 Problèmes connus
 - Aucun.

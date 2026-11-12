@@ -1,6 +1,6 @@
 // Display constraints: length limits (in characters, the font is monospace),
 // characters the font can draw, and forbidden words.
-import { wrapParagraph } from '../../src/ui/text-layout.js';
+import { TEXT_VARIABLES, wrapParagraph } from '../../src/ui/text-layout.js';
 import { FORBIDDEN_WORDS } from '../forbidden-words.js';
 
 export const TEXT_LIMITS = {
@@ -57,6 +57,27 @@ function displayedTexts(data) {
   for (const [id, type] of Object.entries(data.types)) add(`type ${id}`, type.name, {});
   for (const [id, name] of Object.entries(data.habitats)) add(`habitat ${id}`, name, {});
   return texts;
+}
+
+/** Dialog texts (src/data/texts/): drawable characters, known variables, no forbidden words. */
+export function checkGameTexts(data) {
+  const errors = [];
+  for (const [id, text] of Object.entries(data.texts)) {
+    const label = `texte ${id}`;
+    if (typeof text !== 'string' || text.length === 0) {
+      errors.push(`${label} : vide`);
+      continue;
+    }
+    for (const [, name] of text.matchAll(/\{([A-Z_]+)\}/g)) {
+      if (!TEXT_VARIABLES.includes(name)) errors.push(`${label} : variable inconnue {${name}}`);
+    }
+    const drawn = text.replace(/\{[A-Z_]+\}/g, '').replace(/[\f\n]/g, '');
+    const missing = [...new Set(Array.from(drawn).filter((character) => !data.glyphs.has(character)))];
+    if (missing.length > 0) errors.push(`${label} : caractères absents de la police ${JSON.stringify(missing.join(''))}`);
+    const forbidden = findForbiddenWords(text);
+    if (forbidden.length > 0) errors.push(`${label} : mot interdit ${forbidden.join(', ')}`);
+  }
+  return errors;
 }
 
 export function checkTexts(data) {

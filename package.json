@@ -13,7 +13,8 @@
     "atlas": "node tools/build-atlas.js",
     "validate": "node tools/validate-data.js",
     "dist": "node tools/not-implemented.js dist",
-    "bestiary": "node tools/export-bestiary-md.js"
+    "bestiary": "node tools/export-bestiary-md.js",
+    "map-preview": "node tools/map-preview.js"
   },
   "repository": {
     "type": "git",

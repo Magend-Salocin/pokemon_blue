@@ -1,0 +1,72 @@
+// Test map (dev only): small town with a house, NPCs, a sign and a connection to the south.
+export default {
+  id: 'test_bourg',
+  name: 'Bourg d’essai',
+  tileset: 'town',
+  music: 'town_1',
+  border: 'T',
+  layers: {
+    ground: [
+      'TTTTTTTTTTTTTT',
+      'TT__________TT',
+      'TT__________TT',
+      'TT__________TT',
+      'TT__________TT',
+      'TT___:::____TT',
+      'TT_*_:::_**_TT',
+      'TT___:::__S_TT',
+      'TT___:::____TT',
+      'TT___:::_M__TT',
+      'TT___:::____TT',
+      'TTTTT:::TTTTTT',
+    ],
+  },
+  structures: [{ type: 'house_a', x: 3, y: 2, width: 4, door: 1 }],
+  encounters: null,
+  warps: [{ x: 4, y: 4, to: 'test_maison', toX: 3, toY: 7 }],
+  npcs: [
+    { id: 'vieil_homme', sprite: 'vieil_homme', x: 9, y: 5, facing: 'down', movement: 'look', script: 'test_shoes' },
+    { id: 'gamin', sprite: 'gamin', x: 3, y: 8, facing: 'down', movement: 'wander', radius: 2, script: [{ cmd: 'say', text: 'test_kid' }] },
+    { id: 'testeur', sprite: 'scientifique', x: 11, y: 9, facing: 'left', movement: 'static', script: 'test_kit' },
+    { id: 'marcheur', sprite: 'randonneur', x: 8, y: 2, facing: 'right', movement: 'path', path: ['right', 'right', 'left', 'left'], script: [{ cmd: 'say', text: 'test_walker' }] },
+  ],
+  trainers: [],
+  signs: [{ x: 10, y: 7, text: 'test_sign_bourg' }],
+  items: [],
+  hiddenItems: [],
+  triggers: [],
+  connections: { north: null, south: 'test_route', east: null, west: null },
+  scripts: {
+    test_shoes: [
+      {
+        cmd: 'if_flag', flag: 'test_got_shoes',
+        then: [{ cmd: 'say', text: 'test_shoes_after' }],
+        else: [
+          { cmd: 'say', text: 'test_shoes_give' },
+          { cmd: 'give_item', item: 'chaussures' },
+          { cmd: 'set_flag', flag: 'test_got_shoes' },
+        ],
+      },
+    ],
+    test_kit: [
+      {
+        cmd: 'ask', text: 'test_kit_ask',
+        yes: [
+          { cmd: 'give_item', item: 'machette', silent: true },
+          { cmd: 'give_item', item: 'lanterne', silent: true },
+          { cmd: 'give_item', item: 'grappin', silent: true },
+          { cmd: 'give_item', item: 'bouee', silent: true },
+          { cmd: 'give_item', item: 'gants_de_force', silent: true },
+          { cmd: 'give_item', item: 'repulsif', count: 3, silent: true },
+          { cmd: 'give_badge', badge: 'eau' },
+          { cmd: 'give_badge', badge: 'foudre' },
+          { cmd: 'give_badge', badge: 'flore' },
+          { cmd: 'give_badge', badge: 'vent' },
+          { cmd: 'give_creature', creature: 'fenouillot', level: 5 },
+          { cmd: 'say', text: 'test_kit_done' },
+        ],
+        no: [{ cmd: 'say', text: 'test_kit_no' }],
+      },
+    ],
+  },
+};

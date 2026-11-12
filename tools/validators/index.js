@@ -1,11 +1,13 @@
 // Independent checkers. Each takes the loaded game data and returns a list of error messages.
-// Maps and trainers (prompts 04, 09 to 11) add their own checkers here.
+// New data families (audio, saves…) add their own checker here.
 import { checkCreatures } from './creatures.js';
 import { checkEvolutions } from './evolutions.js';
 import { checkIds } from './ids.js';
 import { checkItems, checkTrainerClasses } from './items.js';
 import { checkMoves } from './moves.js';
-import { checkTexts } from './texts.js';
+import { checkMaps, checkTrainers } from './maps.js';
+import { checkGlobalScripts } from './scripts.js';
+import { checkGameTexts, checkTexts } from './texts.js';
 import { checkTypes } from './types.js';
 
 export const CHECKERS = [
@@ -17,6 +19,10 @@ export const CHECKERS = [
   { name: 'Objets', run: checkItems },
   { name: 'Classes de dresseurs', run: checkTrainerClasses },
   { name: 'Textes', run: checkTexts },
+  { name: 'Textes de dialogue', run: checkGameTexts },
+  { name: 'Dresseurs', run: checkTrainers },
+  { name: 'Scripts globaux', run: checkGlobalScripts },
+  { name: 'Cartes', run: checkMaps },
 ];
 
 /** Runs every checker; returns [{ name, errors }]. */

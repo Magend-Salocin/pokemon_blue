@@ -79,6 +79,7 @@ export const ITEMS = [
   item('bouee', 'Bouée', 'key', 0, 'Permet de se déplacer sur l’eau.', field('surf')),
   item('cerf_volant', 'Cerf-Volant', 'key', 0, 'Emmène vers une ville déjà visitée.', field('fly')),
   item('gants_de_force', 'Gants de Force', 'key', 0, 'Permettent de pousser les gros rochers.', field('strength')),
+  item('chaussures', 'Chaussures', 'key', 0, 'Maintenir B pour courir.', { context: 'none', effect: 'none', params: null }),
 
   // Objets de scénario
   item('colis_morvan', 'Colis Morvan', 'key', 0, 'Un colis à remettre à la Pr Morvan.', story),

@@ -12,12 +12,19 @@ import { MOVE_EFFECTS } from '../../src/data/move-effects.js';
 import { MOVES } from '../../src/data/moves.js';
 import { MUSIC_INTROS, TRAINER_CLASSES } from '../../src/data/trainer-classes.js';
 import { TYPE_CHART, TYPES } from '../../src/data/types.js';
+import { ALL_MAPS } from '../../src/data/maps/index.js';
+import { SCRIPTS } from '../../src/data/scripts.js';
+import { TEXTS } from '../../src/data/texts/index.js';
+import { TRAINERS } from '../../src/data/trainers.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
+function readAtlasJson(name) {
+  return JSON.parse(fs.readFileSync(path.join(ROOT, 'assets', 'atlas', `${name}.json`), 'utf8'));
+}
+
 function atlasFrameIds(name) {
-  const json = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets', 'atlas', `${name}.json`), 'utf8'));
-  return new Set(Object.keys(json.frames));
+  return new Set(Object.keys(readAtlasJson(name).frames));
 }
 
 export function loadGameData() {
@@ -36,7 +43,12 @@ export function loadGameData() {
     trainerClasses: TRAINER_CLASSES,
     musicIntros: MUSIC_INTROS,
     handDrawnCreatures: new Set(Object.keys(HAND_DRAWN_CREATURES)),
-    atlas: { ui: atlasFrameIds('ui'), trainers: atlasFrameIds('trainers') },
+    atlas: { ui: atlasFrameIds('ui'), trainers: atlasFrameIds('trainers'), characters: atlasFrameIds('characters') },
+    tilesets: readAtlasJson('tiles').meta.tilesets,
+    maps: ALL_MAPS,
+    scripts: SCRIPTS,
+    texts: TEXTS,
+    trainers: TRAINERS,
     glyphs,
   };
 }
