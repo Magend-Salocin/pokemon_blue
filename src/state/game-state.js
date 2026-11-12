@@ -7,6 +7,8 @@ export function createGameState(overrides = {}) {
     flags: {},
     bag: {},
     party: [],
+    storage: [],
+    bestiary: { seen: {}, caught: {} },
     money: 3000,
     badges: [],
     position: { map: null, x: 0, y: 0, facing: 'down' },
@@ -60,10 +62,36 @@ export function addMoney(state, amount) {
 
 export const PARTY_SIZE = 6;
 
-/** Minimal party member until the battle prompt defines the full structure. */
-export function addCreature(state, creature, level) {
-  const member = { creature, level };
-  if (state.party.length < PARTY_SIZE) state.party.push(member);
-  else (state.storage ??= []).push(member);
-  return member;
+/**
+ * Adds a creature instance (src/battle/logic/creature.js) to the party, or to the storage
+ * when the party is full. Returns 'party' or 'storage'. Marks the species as caught.
+ */
+export function addCreature(state, creature) {
+  markCaught(state, creature.species);
+  if (state.party.length < PARTY_SIZE) {
+    state.party.push(creature);
+    return 'party';
+  }
+  state.storage.push(creature);
+  return 'storage';
+}
+
+/** Full HP, no status, full PP for every party creature. */
+export function healParty(state) {
+  for (const creature of state.party) {
+    creature.hp = creature.stats.hp;
+    creature.status = null;
+    for (const slot of creature.moves) slot.pp = slot.maxPp;
+  }
+}
+
+export const isPartyAlive = (state) => state.party.some((creature) => creature.hp > 0);
+
+export function markSeen(state, species) {
+  state.bestiary.seen[species] = true;
+}
+
+export function markCaught(state, species) {
+  state.bestiary.seen[species] = true;
+  state.bestiary.caught[species] = true;
 }

@@ -9,7 +9,7 @@ Chaque session d'implémentation ajoute une entrée en bas de ce fichier : promp
 | 03 Données de jeu | fait |
 | 04 Moteur de carte | fait |
 | 05 Logique de combat | fait |
-| 06 Interface de combat | à faire |
+| 06 Interface de combat | fait |
 | 07 Menus et systèmes | à faire |
 | 08 Audio | à faire |
 | 09 Monde, partie 1 (arènes 1 à 4) | à faire |
@@ -222,6 +222,40 @@ Décisions
 Reste
 - L'équipe du joueur dans `game-state.js` (`{ creature, level }` créé par `give_creature`) n'utilise pas encore `createCreature` : à brancher avec l'interface de combat (prompt 06).
 - Équilibrage fin (puissances, learnsets) à faire avec le simulateur.
+
+Problèmes connus
+- Aucun.
+
+### 2026-11-12 : prompt 06, interface et animations de combat
+
+Fait
+- `src/battle/ui/` :
+  - `battle-scene.js` : scène de combat (intro sauvage ou dresseur, menus ATTAQUE / SAC / ÉQUIPE / FUITE, menu d'attaque avec type et PP, lecture des événements, choix forcés, sortie, écriture dans `game-state`).
+  - `event-player.js` : un gestionnaire par type d'événement du prompt 05 (texte, animation, son).
+  - `battle-hud.js` (mise en page 160 × 144), `move-animations.js` (15 animations par type, hausse et baisse de stat, étoiles de capture), `bag-screen.js` (poches objets et capsules, objets de combat seulement), `battle-setup.js` (hooks `startBattle` et `startWildBattle` : transition, combat, évolutions).
+- `src/ui/` : `party-screen.js` (écran d'équipe minimal, remplacé au prompt 07), `move-list-screen.js` (liste d'attaques avec détails), `name-entry.js` (grille de caractères, 10 max), `evolution-scene.js` (silhouettes qui alternent de plus en plus vite, B annule), `learn-move.js` (dialogue « oublier une attaque », partagé entre combat et évolution), `creature-widgets.js` (barres PV et XP, statut), `menu-cursor.js` (curseur et `PromiseScene`).
+- Textes de combat : `src/data/texts/battle-fr.js` (une clé par événement ou variante), vérifiés par le validateur. Variables ajoutées : `{MOVE}`, `{TARGET}`, `{TRAINER}`, `{STAT}`.
+- `game-state.js` : l'équipe contient de vraies instances de bestioles (`addCreature` vers l'équipe ou le stockage), `storage`, `bestiary` (`seen`, `caught`), `healParty`. `give_creature` crée l'instance avec `createCreature`.
+- Menu debug F1 (mode dev, sur la carte) : combat contre n'importe quelle espèce et niveau, dresseur IA aléatoire (3 bestioles), équipe de test, soin.
+- Le dresseur de test a 3 bestioles.
+- Tests : helpers purs de l'interface (curseur, barres, saisie de nom, sac de combat, évolution, état du jeu). 184 tests.
+- Vérifié dans Electron en pilotant le jeu : combat sauvage complet (intro, menus, attaque, barres de PV et d'XP), montée de niveau avec fenêtre de stats et évolution Pivelin → Grivelin, apprentissage d'une 5e attaque (Tambourin remplace Égratignure), capture avec la Capsule Maîtresse et surnom, Bestiaire mis à jour, combat de dresseur avec K.O. et changement forcé puis victoire et argent (+90), défaite avec message, argent divisé par deux et retour au point de départ des cartes de test.
+
+Reste
+- La question « Changer de bestiole ? » avant l'envoi suivant du dresseur, la fuite et les objets de soin en combat sont écrits mais n'ont pas été joués de bout en bout dans Electron.
+- Musique et cris : seulement les hooks (`playMusic`, `playSfx('cry_<espèce>')`, `hit`, `faint`, `capsule_*`, `exp`, `level_up`, `evolution`), branchés au prompt 08.
+- Écran d'équipe complet, sac hors combat : prompt 07.
+
+Décisions
+- Les textes de combat sont dans `src/data/texts/battle-fr.js` (dossier `texts/` existant) au lieu de `src/data/text/`.
+- Boîte de texte de combat : messages d'action enchaînés automatiquement (0,6 s, A accélère), messages importants (super efficace, K.O., XP…) attendent A. Vitesse = vitesse de texte × 1,5.
+- Menu principal en grille 2 × 2 sur toute la largeur de la boîte du bas ; le menu d'attaque masque le cadre du joueur et affiche type et PP au-dessus.
+- L'animation de type d'une attaque n'est jouée que si elle touche (lecture anticipée des événements suivants).
+- Défaite : le message et la perte de la moitié de l'argent sont dans la scène de combat (`onLose: 'blackout'`) ; l'overworld soigne et ramène à la dernière Halte. `onLose: 'continue'` : ni perte d'argent ni retour.
+- Changement libre quand le dresseur annonce sa bestiole suivante : nouvelle fonction moteur `freeSwitch(state, index)`.
+- Les évolutions sont jouées après la sortie du combat, avant le retour sur la carte. Les évolutions par pierre (`canCancel: false`) seront déclenchées depuis le sac (prompt 07).
+- Pas de combat sans bestiole en forme : aucune rencontre ni dresseur, et un dresseur à qui l'on parle répond `no_healthy_creature`.
+- `window.debugGame.hooks` exposé en mode dev pour les tests pilotés.
 
 Problèmes connus
 - Aucun.

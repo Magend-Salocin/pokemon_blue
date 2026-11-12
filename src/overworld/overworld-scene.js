@@ -1,6 +1,7 @@
 // Exploration scene: player input, NPCs, trainers, warps, connections, field actions,
 // event scripts and wild encounters. Rendering lives in world-renderer.js.
 import { createRng } from '../engine/rng.js';
+import { createCreature } from '../battle/logic/creature.js';
 import { createScheduler } from '../engine/timer.js';
 import { CREATURES_BY_ID } from '../data/creatures.js';
 import { RUNNING_ITEM, fieldAbilityStatus } from '../data/field-abilities.js';
@@ -11,7 +12,7 @@ import { getText } from '../data/texts/index.js';
 import { TRAINER_CLASSES_BY_ID } from '../data/trainer-classes.js';
 import { TRAINERS_BY_ID } from '../data/trainers.js';
 import {
-  addItem, getGameState, hasBadge, hasFlag, hasItem, setFlag,
+  addItem, getGameState, hasBadge, hasFlag, hasItem, isPartyAlive, setFlag,
 } from '../state/game-state.js';
 import { askYesNo, showDialog } from '../ui/dialog-box.js';
 import {
@@ -319,6 +320,7 @@ export class OverworldScene {
   }
 
   findSpottingTrainer() {
+    if (!isPartyAlive(this.state)) return null;
     for (const actor of this.actors) {
       if (!actor.trainerId || !actor.visible || hasFlag(this.state, `trainer_${actor.trainerId}`)) continue;
       const distance = trainerSees(actor, this.player, (x, y) => blocksSight(this.map, x, y) || this.isOccupied(x, y, actor));
@@ -328,6 +330,7 @@ export class OverworldScene {
   }
 
   checkWildEncounter(tile) {
+    if (!isPartyAlive(this.state)) return;
     const mapEncounters = this.map.encounters;
     const kind = encounterKind(tile, { surfing: this.surfing, mapEncounters });
     const encounter = rollEncounter({
@@ -381,6 +384,7 @@ export class OverworldScene {
     actor.facing = OPPOSITE[this.player.facing];
     if (actor.trainerId) {
       if (hasFlag(this.state, `trainer_${actor.trainerId}`)) await this.say(TRAINERS_BY_ID[actor.trainerId].after);
+      else if (!isPartyAlive(this.state)) await this.say('no_healthy_creature');
       else await this.trainerEncounter(actor, 1);
       return;
     }
@@ -480,9 +484,9 @@ export class OverworldScene {
     return battle.promise;
   }
 
-  battle(trainerId) {
+  battle(trainerId, onLose = 'blackout') {
     const trainer = TRAINERS_BY_ID[trainerId];
-    if (hooks.startBattle) return hooks.startBattle(trainer);
+    if (hooks.startBattle) return hooks.startBattle(trainer, { onLose });
     const className = TRAINER_CLASSES_BY_ID[trainer.class]?.name ?? '';
     return this.runBattleStub(['Combat contre', `${className} ${trainer.name}`.trim()]);
   }
@@ -507,8 +511,8 @@ export class OverworldScene {
     if (result.type === 'walk' && this.map.inBounds(result.x, result.y)) await this.movePlayerScripted(this.player.facing);
   }
 
+  /** After a lost battle (the battle scene already showed the message): heal and go back. */
   async blackout() {
-    await this.say('blackout');
     hooks.healParty();
     const destination = this.state.lastHalte ?? this.respawn;
     await this.manager.fadeOut();
@@ -598,7 +602,8 @@ export class OverworldScene {
         actor.facing = directionTo(actor.x, actor.y, this.player.x, this.player.y) ?? OPPOSITE[this.player.facing];
       },
       wait: (seconds) => this.scheduler.wait(seconds),
-      battle: (trainerId) => this.battle(trainerId),
+      battle: (trainerId, onLose) => this.battle(trainerId, onLose),
+      createCreature: (species, level) => createCreature(species, level, this.rng, { originalTrainer: this.state.player.name }),
       wildBattle: (creature, level) => this.wildBattle(creature, level),
       blackout: () => this.blackout(),
       warp: (mapId, x, y, facing) => this.doWarp(mapId, x, y, facing),

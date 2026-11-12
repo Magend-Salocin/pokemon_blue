@@ -5,7 +5,7 @@ export const DIALOG_LINE_WIDTH = 18;
 export const DIALOG_LINES_PER_PAGE = 2;
 
 /** Variables available in game texts, filled from a context object with the same keys. */
-export const TEXT_VARIABLES = ['PLAYER', 'RIVAL', 'CREATURE', 'ITEM', 'NUMBER'];
+export const TEXT_VARIABLES = ['PLAYER', 'RIVAL', 'CREATURE', 'ITEM', 'NUMBER', 'MOVE', 'TARGET', 'TRAINER', 'STAT'];
 
 const VARIABLE_PATTERN = /\{([A-Z_]+)\}/g;
 const NO_BREAK_SPACE = ' ';

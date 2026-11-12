@@ -87,15 +87,16 @@ export function createScriptRunner(ctx) {
       removeItem(state, c.item, c.count ?? 1);
     },
     give_creature: async (c) => {
-      addCreature(state, c.creature, c.level);
+      addCreature(state, ctx.createCreature(c.creature, c.level));
       await ctx.say('got_creature', { CREATURE: ctx.creatureName(c.creature) });
     },
     give_money: (c) => addMoney(state, c.amount),
     give_badge: (c) => addBadge(state, c.badge),
     heal_party: () => ctx.healParty(),
     battle: async (c) => {
-      const outcome = await ctx.battle(c.trainer);
-      if (outcome === 'lose' && (c.onLose ?? 'blackout') === 'blackout') {
+      const onLose = c.onLose ?? 'blackout';
+      const outcome = await ctx.battle(c.trainer, onLose);
+      if (outcome === 'lose' && onLose === 'blackout') {
         await ctx.blackout();
         return STOP;
       }

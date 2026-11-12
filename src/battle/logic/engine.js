@@ -441,6 +441,19 @@ export function answerLearnMove(state, slot) {
   return { state: s, events: [learnMove(creature, pending.index, pending.move, slot)] };
 }
 
+/**
+ * Free switch offered when a trainer announces its next creature (no turn is spent).
+ * Only valid between turns, without pending decision.
+ */
+export function freeSwitch(state, index) {
+  if (state.pending.length > 0 || state.outcome) throw new Error('Free switch not allowed now');
+  if (!aliveBench(state, PLAYER).includes(index)) throw new Error(`Cannot switch to ${index}`);
+  const s = structuredClone(state);
+  const events = [];
+  switchIn(s, PLAYER, index, events);
+  return { state: s, events };
+}
+
 /** Sends a new creature after the active one fainted. */
 export function chooseSwitch(state, index) {
   const pending = currentPending(state);

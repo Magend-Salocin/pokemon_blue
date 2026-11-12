@@ -6,7 +6,7 @@ export const TRAINERS = [
     id: 'test_gamin',
     class: 'gamin',
     name: 'Léo',
-    party: [{ creature: 'musaraille', level: 4 }, { creature: 'pivelin', level: 4 }],
+    party: [{ creature: 'musaraille', level: 5 }, { creature: 'pivelin', level: 5 }, { creature: 'feuillarve', level: 6 }],
     intro: 'test_gamin_intro',
     defeat: 'test_gamin_defeat',
     after: 'test_gamin_after',

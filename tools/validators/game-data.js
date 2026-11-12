@@ -14,6 +14,7 @@ import { MUSIC_INTROS, TRAINER_CLASSES } from '../../src/data/trainer-classes.js
 import { TYPE_CHART, TYPES } from '../../src/data/types.js';
 import { ALL_MAPS } from '../../src/data/maps/index.js';
 import { SCRIPTS } from '../../src/data/scripts.js';
+import { BATTLE_TEXTS } from '../../src/data/texts/battle-fr.js';
 import { TEXTS } from '../../src/data/texts/index.js';
 import { TRAINERS } from '../../src/data/trainers.js';
 
@@ -48,6 +49,7 @@ export function loadGameData() {
     maps: ALL_MAPS,
     scripts: SCRIPTS,
     texts: TEXTS,
+    battleTexts: BATTLE_TEXTS,
     trainers: TRAINERS,
     glyphs,
   };

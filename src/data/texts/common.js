@@ -5,7 +5,6 @@ export default {
   found_item: '{PLAYER} trouve {ITEM} !',
   got_creature: '{PLAYER} reçoit {CREATURE} !',
   repel_ended: 'Le Répulsif ne fait plus effet.',
-  blackout: '{PLAYER} n’a plus de bestiole en état de se battre !\f{PLAYER} retourne en courant à la dernière Halte…',
 
   field_cut_blocked: 'Un arbuste bloque le passage. Il faudrait de quoi le couper.',
   field_cut_no_badge: 'La Machette ne s’utilise qu’avec le badge Eau.',
@@ -22,4 +21,5 @@ export default {
   field_strength_stuck: 'Le rocher ne bouge pas.',
 
   trainer_placeholder_after: 'Bien joué. Je n’ai plus rien à te montrer.',
+  no_healthy_creature: 'Tu n’as aucune bestiole en état de te battre !',
 };

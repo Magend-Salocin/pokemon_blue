@@ -62,7 +62,8 @@ function displayedTexts(data) {
 /** Dialog texts (src/data/texts/): drawable characters, known variables, no forbidden words. */
 export function checkGameTexts(data) {
   const errors = [];
-  for (const [id, text] of Object.entries(data.texts)) {
+  const battle = Object.entries(data.battleTexts ?? {}).map(([id, text]) => [`combat ${id}`, text]);
+  for (const [id, text] of [...Object.entries(data.texts), ...battle]) {
     const label = `texte ${id}`;
     if (typeof text !== 'string' || text.length === 0) {
       errors.push(`${label} : vide`);
