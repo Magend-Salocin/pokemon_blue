@@ -61,6 +61,7 @@ export class EventPlayer {
       await this.say('player_sends', { CREATURE: creatureName(this.creatureAt(0, event.index)) }, { wait: false });
     }
     scene.showCreature(side, event);
+    hooks.playSfx('capsule_open');
     hooks.playSfx(`cry_${event.species}`);
     await scene.slide(side, side === 0 ? -48 : 48, 0, 0.3);
   }
@@ -112,7 +113,8 @@ export class EventPlayer {
   async damage(event, rest) {
     const { scene } = this;
     if (event.source === 'move') {
-      hooks.playSfx('hit');
+      const effectiveness = rest.find((other) => other.type === 'effectiveness')?.value ?? 1;
+      hooks.playSfx(effectiveness > 1 ? 'hit_super' : effectiveness < 1 ? 'hit_weak' : 'hit');
       const strong = rest.some((other) => other.type === 'effectiveness' && other.value > 1) || event.amount >= event.maxHp * 0.4;
       await Promise.all([scene.blink(event.side, BLINK_COUNT), strong ? scene.shakeScreen(0.3) : null]);
     } else if (event.source === 'recoil' || event.source === 'struggle') {
@@ -179,6 +181,7 @@ export class EventPlayer {
       return;
     }
     const up = event.delta > 0;
+    hooks.playSfx(up ? 'stat_up' : 'stat_down');
     const center = spriteCenter(event.side);
     await this.scene.playAnimation(up ? STAT_ANIMATIONS.up : STAT_ANIMATIONS.down, center, center);
     const strong = Math.abs(event.delta) >= 2 ? '_2' : '';
@@ -216,7 +219,7 @@ export class EventPlayer {
   async capture_success(event) {
     const { scene } = this;
     await scene.playAnimation(CAPTURE_STARS, scene.view.capsule, scene.view.capsule);
-    hooks.playSfx('capture');
+    hooks.playSfx('jingle_capture');
     await this.say('capture_success', { CREATURE: CREATURES_BY_ID[event.species].name });
   }
 
@@ -227,7 +230,10 @@ export class EventPlayer {
     await this.say(`capture_fail_${event.shakes}`);
   }
 
-  run_success() { return this.say('run_success'); }
+  run_success() {
+    hooks.playSfx('run');
+    return this.say('run_success');
+  }
   run_fail() { return this.say('run_fail'); }
   run_blocked(event) { return this.say(`run_blocked_${event.reason}`); }
 
@@ -269,7 +275,7 @@ export class EventPlayer {
       scene.shown[0].hp = Math.min(event.stats.hp, scene.shown[0].hp + event.stats.hp - event.previousStats.hp);
       scene.shown[0].expRatio = 0;
     }
-    hooks.playSfx('level_up');
+    hooks.playSfx('jingle_level_up');
     await this.say('level_up', { CREATURE: creatureName(this.creatureAt(0, event.index)), NUMBER: event.level });
     await scene.showStatGains(event.previousStats, event.stats);
     if (shownCreature) await this.fillExpBar(event.index);

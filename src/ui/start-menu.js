@@ -1,6 +1,7 @@
 // Start menu (window on the right): BESTIAIRE (once obtained), BESTIOLES, SAC, {PLAYER},
 // SAUVER, OPTIONS, FERMER. Hidden entries are not shown. `field` gives the map actions.
 import { hasFlag } from '../state/game-state.js';
+import { hooks } from '../overworld/hooks.js';
 import { openBag } from './bag-menu.js';
 import { openBestiary } from './bestiary-screen.js';
 import { ListMenu } from './components/list-menu.js';
@@ -40,7 +41,11 @@ export function openStartMenu(manager, state, field) {
       else if (id === 'card') await openTrainerCard(manager, state);
       else if (id === 'options') await openOptions(manager);
       else if (id === 'save') {
-        if (await ask(manager, 'menu_save_ask')) await say(manager, (await field.save?.()) ? 'menu_saved' : 'menu_save_failed');
+        if (await ask(manager, 'menu_save_ask')) {
+          const saved = await field.save?.();
+          if (saved) hooks.playSfx('save');
+          await say(manager, saved ? 'menu_saved' : 'menu_save_failed');
+        }
       } else {
         const result = id === 'party' ? await openPartyMenu(manager, state, field) : await openBag(manager, state, field);
         if (result?.action) return result.action;

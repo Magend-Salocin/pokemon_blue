@@ -58,7 +58,6 @@ export class EvolutionScene extends PromiseScene {
     const name = creatureName(this.creature);
     await sayBattle(this.manager, 'evolution_start', { CREATURE: name });
     this.phase = 'morphing';
-    hooks.playMusic('evolution');
     const cancelled = await new Promise((resolve) => {
       this.finishMorph = resolve;
     });
@@ -71,7 +70,7 @@ export class EvolutionScene extends PromiseScene {
     evolveCreature(this.creature, this.targetId);
     markCaught(getGameState(), this.targetId);
     this.phase = 'done';
-    hooks.playSfx('evolution');
+    hooks.playSfx('jingle_evolution');
     await sayBattle(this.manager, 'evolution_done', { CREATURE: name, TARGET: getSpecies(this.targetId).name });
     for (const moveId of movesLearnedAt(this.targetId, this.creature.level)) {
       await learnMoveOutsideBattle(this.manager, this.creature, moveId);

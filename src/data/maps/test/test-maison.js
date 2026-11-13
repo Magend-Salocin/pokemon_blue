@@ -3,7 +3,7 @@ export default {
   id: 'test_maison',
   name: 'Maison d’essai',
   tileset: 'indoor',
-  music: 'house',
+  music: 'hometown',
   layers: {
     ground: [
       '#w##w###',

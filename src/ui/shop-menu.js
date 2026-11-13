@@ -8,6 +8,7 @@ import { ListMenu } from './components/list-menu.js';
 import { openAndKeep, withMenuLayer } from './components/menu-layer.js';
 import { MoneyWindow, QuantityWindow } from './components/small-windows.js';
 import { ask, say } from './messages.js';
+import { hooks } from '../overworld/hooks.js';
 
 const MAIN = ['ACHETER', 'VENDRE', 'QUITTER'];
 
@@ -30,6 +31,7 @@ async function buyOne(manager, layer, state, itemId) {
   const total = ITEMS_BY_ID[itemId].price * quantity;
   if (!(await ask(manager, 'shop_buy_confirm', { ITEM: `${ITEMS_BY_ID[itemId].name} ×${quantity}`, NUMBER: total }))) return false;
   const error = buyItem(state, itemId, quantity);
+  if (!error) hooks.playSfx('buy');
   await say(manager, error === 'money' ? 'shop_no_money' : error === 'bag_full' ? 'shop_bag_full' : 'shop_thanks');
   return false;
 }

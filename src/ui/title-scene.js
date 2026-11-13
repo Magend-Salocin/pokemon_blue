@@ -6,6 +6,7 @@ import { drawText, measureText } from '../gfx/font.js';
 import { getColor } from '../gfx/palette.js';
 import { ListMenu } from './components/list-menu.js';
 import { openOptions } from './options-screen.js';
+import { hooks } from '../overworld/hooks.js';
 
 export class TitleScene {
   transparent = false;
@@ -23,6 +24,7 @@ export class TitleScene {
   enter(manager) {
     this.manager = manager;
     manager.fadeIn({ color: 'black', duration: 0.6 });
+    hooks.playMusic('title');
   }
 
   get entries() {

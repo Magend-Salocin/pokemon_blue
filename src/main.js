@@ -7,11 +7,12 @@ import { cyclePalette } from './gfx/palette.js';
 import { installBattleHooks } from './battle/ui/battle-setup.js';
 import { TEST_START } from './data/maps/index.js';
 import { DebugMenuScene } from './debug/debug-menu.js';
-import { hooks } from './overworld/hooks.js';
+import { hooks, setHooks } from './overworld/hooks.js';
 import { OverworldScene } from './overworld/overworld-scene.js';
 import { createGameState, getGameState, setGameState } from './state/game-state.js';
 import { LoadingScene } from './ui/loading-scene.js';
 import { installMenuHooks } from './ui/menu-hooks.js';
+import { createAudioSystem } from './audio/audio-system.js';
 import { loadAndApplyOptions, registerOptionTargets } from './ui/options-screen.js';
 import { TitleScene } from './ui/title-scene.js';
 
@@ -20,6 +21,7 @@ const input = createInput();
 const scenes = createSceneManager();
 const isDev = Boolean(window.bestiora?.isDev);
 let overworld = null;
+let audio = null;
 
 function isPaletteShortcut() {
   return (
@@ -54,7 +56,7 @@ function startGame(state, start) {
   setGameState(state);
   const tilesets = getAtlas('tiles').meta.tilesets;
   overworld = scenes.replace(new OverworldScene({ start, tilesets, state, respawn: TEST_START }));
-  if (isDev) window.debugGame = { scenes, overworld, state, hooks };
+  if (isDev) window.debugGame = { scenes, overworld, state, hooks, audio };
 }
 
 function showTitle() {
@@ -81,6 +83,8 @@ async function boot() {
   const loading = scenes.push(new LoadingScene());
   try {
     registerOptionTargets({ input });
+    audio = createAudioSystem();
+    setHooks({ playMusic: audio.playMusic, playSfx: audio.playSfx, setVolumes: audio.setVolumes });
     await loadAndApplyOptions();
     await loadAtlases((loaded, total) => loading.setProgress(loaded, total));
     installBattleHooks(scenes);

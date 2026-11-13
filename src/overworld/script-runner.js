@@ -83,6 +83,7 @@ export function createScriptRunner(ctx) {
     if_badge: (c) => runList(hasBadge(state, c.badge) ? c.then : c.else),
     give_item: async (c) => {
       addItem(state, c.item, c.count ?? 1);
+      if (!c.silent) ctx.playSfx(ctx.itemPocket?.(c.item) === 'key' ? 'jingle_key_item' : 'jingle_item');
       if (!c.silent) await ctx.say('got_item', { ITEM: ctx.itemName(c.item), NUMBER: c.count ?? 1 });
     },
     take_item: (c) => {
@@ -93,7 +94,10 @@ export function createScriptRunner(ctx) {
       await ctx.say('got_creature', { CREATURE: ctx.creatureName(c.creature) });
     },
     give_money: (c) => addMoney(state, c.amount),
-    give_badge: (c) => addBadge(state, c.badge),
+    give_badge: (c) => {
+      addBadge(state, c.badge);
+      ctx.playSfx('jingle_badge');
+    },
     heal_party: () => ctx.healParty(),
     battle: async (c) => {
       const onLose = c.onLose ?? 'blackout';

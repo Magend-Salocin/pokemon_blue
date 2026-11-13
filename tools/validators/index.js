@@ -1,5 +1,6 @@
 // Independent checkers. Each takes the loaded game data and returns a list of error messages.
 // New data families (audio, saves…) add their own checker here.
+import { checkAudio } from './audio.js';
 import { checkCreatures } from './creatures.js';
 import { checkEvolutions } from './evolutions.js';
 import { checkIds } from './ids.js';
@@ -23,6 +24,7 @@ export const CHECKERS = [
   { name: 'Dresseurs', run: checkTrainers },
   { name: 'Scripts globaux', run: checkGlobalScripts },
   { name: 'Cartes', run: checkMaps },
+  { name: 'Audio', run: checkAudio },
 ];
 
 /** Runs every checker; returns [{ name, errors }]. */

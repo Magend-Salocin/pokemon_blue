@@ -11,6 +11,7 @@ import { getColor } from '../gfx/palette.js';
 import { PromiseScene, moveCursor, scrollOffset } from './menu-cursor.js';
 import { wrapParagraph } from './text-layout.js';
 import { drawWindowFrame } from './window-frame.js';
+import { hooks } from '../overworld/hooks.js';
 
 const VISIBLE_ROWS = 7;
 const REGION_ORIGIN = { x: 0, y: 16 };
@@ -50,7 +51,10 @@ export class BestiaryScreen extends PromiseScene {
       if (input.repeat('right')) this.index = Math.min(CREATURES.length - 1, this.index + VISIBLE_ROWS);
       if (input.repeat('left')) this.index = Math.max(0, this.index - VISIBLE_ROWS);
       this.offset = scrollOffset(this.offset, this.index, VISIBLE_ROWS);
-      if (input.justPressed('a') && this.isSeen(this.species)) this.view = 'entry';
+      if (input.justPressed('a') && this.isSeen(this.species)) {
+        this.view = 'entry';
+        hooks.playSfx(`cry_${this.species.id}`);
+      }
       else if (input.justPressed('b')) this.done(null);
       return;
     }

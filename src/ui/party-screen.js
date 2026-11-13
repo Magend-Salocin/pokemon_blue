@@ -11,6 +11,7 @@ import {
 } from './creature-widgets.js';
 import { PromiseScene, moveCursor } from './menu-cursor.js';
 import { drawWindowFrame } from './window-frame.js';
+import { hooks } from '../overworld/hooks.js';
 
 const ROW_HEIGHT = 20;
 const MESSAGE_Y = 120;
@@ -57,8 +58,12 @@ export class PartyScreen extends PromiseScene {
     this.time += dt;
     const previous = this.index;
     this.index = moveCursor(this.index, this.party.length, input);
-    if (this.index !== previous) this.error = null;
+    if (this.index !== previous) {
+      this.error = null;
+      hooks.playSfx('cursor');
+    }
     if (input.justPressed('a')) {
+      hooks.playSfx('confirm');
       const error = this.canSelect(this.party[this.index], this.index);
       if (error) this.error = error;
       else this.done(this.index);

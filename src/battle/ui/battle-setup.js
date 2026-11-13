@@ -21,6 +21,7 @@ export function trainerBattleConfig(trainer) {
     ai: trainer.ai,
     portrait: trainer.portrait ?? trainerClass?.portrait ?? 'portrait/dresseur',
     defeat: trainer.defeat,
+    music: trainer.music,
   };
 }
 

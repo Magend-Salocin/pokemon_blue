@@ -1,4 +1,5 @@
-// Debug menu (F1, dev only): battles against any species or a random AI team, test party, heal.
+// Debug menu (F1, dev only): battles against any species or a random AI team, test party, heal,
+// jukebox (tracks, sound effects, the cry of the selected species).
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../engine/constants.js';
 import { createRng } from '../engine/rng.js';
 import { CREATURES } from '../data/creatures.js';
@@ -7,11 +8,15 @@ import { getColor } from '../gfx/palette.js';
 import { createCreature } from '../battle/logic/creature.js';
 import { hooks } from '../overworld/hooks.js';
 import { AtlasViewerScene } from './atlas-viewer-scene.js';
+import { SFX } from '../audio/sfx.js';
+import { TRACKS } from '../audio/tracks/index.js';
 import { addItem, getGameState, healParty } from '../state/game-state.js';
 import { PromiseScene, moveCursor } from '../ui/menu-cursor.js';
 import { drawWindowFrame } from '../ui/window-frame.js';
 
-const ROWS = ['species', 'level', 'wild', 'trainer', 'party', 'heal', 'atlas', 'close'];
+const ROWS = ['species', 'level', 'wild', 'trainer', 'party', 'heal', 'music', 'sfx', 'cry', 'atlas', 'close'];
+const TRACK_IDS = Object.keys(TRACKS);
+const SFX_IDS = SFX.map((effect) => effect.id);
 const TEST_PARTY = ['fenouvert', 'ondeclat', 'fournaise'];
 
 export class DebugMenuScene extends PromiseScene {
@@ -21,6 +26,8 @@ export class DebugMenuScene extends PromiseScene {
     this.index = 0;
     this.speciesIndex = 9;
     this.level = 10;
+    this.trackIndex = 0;
+    this.sfxIndex = 0;
     this.message = '';
     this.rng = createRng(Date.now());
   }
@@ -35,6 +42,8 @@ export class DebugMenuScene extends PromiseScene {
     const delta = (input.repeat('right') ? 1 : 0) - (input.repeat('left') ? 1 : 0);
     if (row === 'species' && delta) this.speciesIndex = (this.speciesIndex + delta + CREATURES.length) % CREATURES.length;
     if (row === 'level' && delta) this.level = Math.max(1, Math.min(100, this.level + delta * (input.isDown('select') ? 10 : 1)));
+    if (row === 'music' && delta) this.trackIndex = (this.trackIndex + delta + TRACK_IDS.length) % TRACK_IDS.length;
+    if (row === 'sfx' && delta) this.sfxIndex = (this.sfxIndex + delta + SFX_IDS.length) % SFX_IDS.length;
     if (input.justPressed('b')) this.done(null);
     if (input.justPressed('a')) this.activate(row);
   }
@@ -56,6 +65,12 @@ export class DebugMenuScene extends PromiseScene {
     } else if (row === 'heal') {
       healParty(this.state);
       this.message = 'Équipe soignée.';
+    } else if (row === 'music') {
+      hooks.playMusic(TRACK_IDS[this.trackIndex]);
+    } else if (row === 'sfx') {
+      hooks.playSfx(SFX_IDS[this.sfxIndex]);
+    } else if (row === 'cry') {
+      hooks.playSfx(`cry_${this.species.id}`);
     } else if (row === 'atlas') {
       this.manager.replace(new AtlasViewerScene());
     } else if (row === 'close') {
@@ -89,14 +104,17 @@ export class DebugMenuScene extends PromiseScene {
       trainer: 'Dresseur IA',
       party: 'Équipe de test',
       heal: 'Soigner',
+      music: `Piste ${TRACK_IDS[this.trackIndex]}`.slice(0, 18),
+      sfx: `Effet ${SFX_IDS[this.sfxIndex]}`.slice(0, 18),
+      cry: `Cri ${this.species.name}`,
       atlas: 'Atlas',
       close: 'Fermer',
     };
     ROWS.forEach((row, index) => {
-      const y = 18 + index * 12;
+      const y = 14 + index * 10;
       if (index === this.index) drawText(ctx, '▶', 8, y);
       drawText(ctx, labels[row], 16, y);
     });
-    drawText(ctx, this.message, 8, 120);
+    drawText(ctx, this.message, 8, 128);
   }
 }

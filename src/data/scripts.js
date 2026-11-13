@@ -9,7 +9,7 @@ export const SCRIPTS = {
       cmd: 'ask', text: 'halte_welcome',
       yes: [
         { cmd: 'say', text: 'halte_wait' },
-        { cmd: 'play_sfx', sfx: 'heal' },
+        { cmd: 'play_sfx', sfx: 'jingle_heal' },
         { cmd: 'fade', direction: 'out', color: 'white' },
         { cmd: 'heal_party' },
         { cmd: 'wait', seconds: 0.4 },

@@ -23,6 +23,8 @@ import { choosePartyMember } from '../../ui/party-screen.js';
 import { applyVariables, layoutText } from '../../ui/text-layout.js';
 import { drawWindowFrame } from '../../ui/window-frame.js';
 import { getOptions } from '../../state/options.js';
+import { BATTLE_MUSIC, VICTORY_MUSIC, WILD_BATTLE_MUSIC } from '../../data/music.js';
+import { TRAINER_CLASSES_BY_ID } from '../../data/trainer-classes.js';
 import { chooseAction } from '../logic/ai.js';
 import {
   battleStartEvents, chooseSwitch, createBattle, currentPending, freeSwitch, getAvailableActions, resolveTurn,
@@ -185,7 +187,7 @@ export class BattleScene {
     this.trainer = trainer;
     this.canRun = canRun;
     this.onLose = onLose;
-    this.music = music ?? (kind === 'wild' ? 'wild_battle' : 'trainer_battle');
+    this.music = music ?? trainer?.music ?? (kind === 'wild' ? WILD_BATTLE_MUSIC : BATTLE_MUSIC[TRAINER_CLASSES_BY_ID[trainer?.class]?.musicIntro] ?? BATTLE_MUSIC.trainer);
     this.battle = createBattle({
       kind,
       playerParty: state.party,
@@ -492,6 +494,7 @@ export class BattleScene {
 
   async outro() {
     const outcome = this.battle.outcome;
+    if (outcome === 'win' || outcome === 'caught') hooks.playMusic(VICTORY_MUSIC[this.battle.kind]);
     if (outcome === 'win' && this.battle.kind === 'trainer') {
       const portrait = this.view.portraits.trainer;
       portrait.visible = true;

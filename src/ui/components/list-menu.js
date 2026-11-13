@@ -5,6 +5,7 @@ import { drawText } from '../../gfx/font.js';
 import { getColor } from '../../gfx/palette.js';
 import { moveCursor, scrollOffset } from '../menu-cursor.js';
 import { drawWindowFrame } from '../window-frame.js';
+import { hooks } from '../../overworld/hooks.js';
 
 function drawUpArrow(ctx, x, y) {
   ctx.fillStyle = getColor(3);
@@ -39,9 +40,18 @@ export class ListMenu {
       this.index = moveCursor(this.index, this.items.length, input, { wrap: this.items.length <= this.rows });
       this.offset = scrollOffset(this.offset, this.index, this.rows);
     }
-    if (previous !== this.index) this.onChange?.(this.index);
-    if (input.justPressed('a') && this.items.length > 0 && !this.items[this.index].disabled) return { value: this.index };
-    if (input.justPressed('b') && this.cancellable) return { value: null };
+    if (previous !== this.index) {
+      hooks.playSfx('cursor');
+      this.onChange?.(this.index);
+    }
+    if (input.justPressed('a') && this.items.length > 0 && !this.items[this.index].disabled) {
+      hooks.playSfx('confirm');
+      return { value: this.index };
+    }
+    if (input.justPressed('b') && this.cancellable) {
+      hooks.playSfx('cancel');
+      return { value: null };
+    }
     return undefined;
   }
 

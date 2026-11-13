@@ -28,6 +28,7 @@ import { createNpcBrain, updateNpc } from './npc.js';
 import { createScriptRunner } from './script-runner.js';
 import { computeCamera, createWorld, edgeOf, toNeighborCoordinates } from './world.js';
 import { renderWorld } from './world-renderer.js';
+import { ENCOUNTER_MUSIC } from '../data/music.js';
 import { daycareStep } from '../state/daycare.js';
 import { ListMenu } from '../ui/components/list-menu.js';
 import { withMenuLayer } from '../ui/components/menu-layer.js';
@@ -290,6 +291,7 @@ export class OverworldScene {
       return;
     }
     const tile = this.map.metatileAt(player.x, player.y);
+    if (tile.grass) hooks.playSfx('grass');
     this.sliding = Boolean(tile.slippery) && !this.surfing;
     if (this.sliding) return;
 
@@ -410,7 +412,7 @@ export class OverworldScene {
     addItem(this.state, entry.item);
     setFlag(this.state, entry.flag);
     this.objects = this.objects.filter((object) => object !== entry);
-    hooks.playSfx('item');
+    hooks.playSfx(ITEMS_BY_ID[entry.item]?.pocket === 'key' ? 'jingle_key_item' : 'jingle_item');
     await this.say(textId, { ITEM: this.itemName(entry.item) });
   }
 
@@ -466,6 +468,7 @@ export class OverworldScene {
     if (!(await this.checkFieldAbility('surf', 'field_surf'))) return;
     if (!(await this.ask('field_surf_ask'))) return;
     this.surfing = true;
+    hooks.playSfx('surf');
     this.updatePlayerSprite();
     await this.movePlayerScripted(this.player.facing);
   }
@@ -476,7 +479,8 @@ export class OverworldScene {
     const trainer = TRAINERS_BY_ID[actor.trainerId];
     this.sliding = false;
     this.emote = actor;
-    hooks.playMusic(TRAINER_CLASSES_BY_ID[trainer.class]?.musicIntro ?? 'trainer');
+    hooks.playSfx('exclamation');
+    hooks.playMusic(ENCOUNTER_MUSIC[TRAINER_CLASSES_BY_ID[trainer.class]?.musicIntro] ?? ENCOUNTER_MUSIC.trainer);
     await this.scheduler.wait(EMOTE_DURATION);
     this.emote = null;
     for (let i = 1; i < distance; i += 1) await this.moveActorStep(actor, actor.facing);
@@ -507,7 +511,6 @@ export class OverworldScene {
   }
 
   async wildBattle(creature, level) {
-    hooks.playMusic('wild_battle');
     const outcome = hooks.startWildBattle
       ? await hooks.startWildBattle({ creature, level })
       : await this.runBattleStub([`${this.creatureName(creature)} sauvage`, `Niveau ${level}`]);
@@ -517,7 +520,8 @@ export class OverworldScene {
   }
 
   async doWarp(mapId, x, y, facing = this.player.facing) {
-    hooks.playSfx('door');
+    const fromTile = this.map.tileAt(this.player.x, this.player.y) ?? '';
+    hooks.playSfx(/stairs|ladder/.test(fromTile) ? 'stairs' : fromTile === 'teleporter' ? 'teleporter' : 'door');
     await this.manager.fadeOut();
     this.loadMapAt(mapId, x, y, facing);
     await this.manager.fadeIn();
@@ -649,6 +653,7 @@ export class OverworldScene {
       },
       healParty: () => hooks.healParty(),
       itemName: (id) => this.itemName(id),
+      itemPocket: (id) => ITEMS_BY_ID[id]?.pocket,
       creatureName: (id) => this.creatureName(id),
     };
   }

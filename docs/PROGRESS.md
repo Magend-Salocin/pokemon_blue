@@ -11,7 +11,7 @@ Chaque session d'implémentation ajoute une entrée en bas de ce fichier : promp
 | 05 Logique de combat | fait |
 | 06 Interface de combat | fait |
 | 07 Menus et systèmes | fait |
-| 08 Audio | à faire |
+| 08 Audio | fait |
 | 09 Monde, partie 1 (arènes 1 à 4) | à faire |
 | 10 Monde, partie 2 (arènes 5 à 8) | à faire |
 | 11 Ligue, post-jeu, fin | à faire |
@@ -286,6 +286,33 @@ Décisions
 - Vitamines plafonnées à 100 points d'entraînement par stat (le combat peut aller jusqu'à 255).
 - Une évolution inscrit la nouvelle espèce comme capturée au Bestiaire.
 - La carte des zones du Bestiaire (`src/data/region.js`) liste déjà les ids de carte prévus pour les prompts 09 à 11.
+
+Problèmes connus
+- Aucun.
+
+### 2026-11-13 : prompt 08, synthé chiptune, pistes originales et effets
+
+Fait
+- `src/audio/` : `synth.js` (Web Audio : 2 carrés à 12,5 / 25 / 50 / 75 %, table d’onde 32 × 4 bits, bruit LFSR 15 et 7 bits, enveloppes, glissando sur la voie 1, bus musique et effets, emprunt de voie par les effets), `sequencer.js` (ordonnancement 100 ms en avance sur l’horloge audio, bouclage, fondu, position pour reprendre), `track-parser.js` (format texte pur et testé, erreurs avec le symbole fautif, barres de mesure vérifiées), `cries.js` (cris procéduraux), `sfx.js` (28 effets), `audio-system.js` (musique, reprise de la piste de carte après un combat, jingles qui interrompent puis rendent la musique, volumes, démarrage au premier input, pause hors focus).
+- 30 pistes originales dans `src/audio/tracks/` : 20 thèmes (pistes de carte de 31 à 46 s, combats de 48 à 51 s, `ending` de 50 s), 7 jingles (objet, objet clé, badge, Halte, capture, évolution, niveau), 3 boucles de repérage par un dresseur. Le motif du jeu (ré, la, sol, si, la) ouvre `title`, revient plus lent dans `hometown` et encadre `ending`.
+- Format documenté dans `docs/AUDIO_FORMAT.md`.
+- Branchements : musique par carte, repérage (« ! » puis boucle selon `musicIntro`), thème de combat selon la classe (ou `trainer.music`), fanfare de victoire, sons de menus (curseur, validation, annulation), portes, escaliers, téléporteurs, herbe, saut, surf, coupe, rocher, achat, sauvegarde, coups (normal, super efficace, peu efficace), boost, baisse, K.O., capsule, fuite, XP, cris en combat et dans le Bestiaire, jingles d’objet, de badge, de soin, de capture, d’évolution et de niveau. Volumes des options appliqués aux bus.
+- `src/data/music.js` : musiques de repérage, de combat et de victoire.
+- Menu F1 : jukebox (pistes, effets, cri de l’espèce choisie).
+- Validateur : toutes les pistes et tous les effets s’analysent, durées minimales, présence du motif, pistes référencées par les cartes, classes et dresseurs existantes.
+- Tests : parser (notes, durées, réglages, répétitions imbriquées, bouclage, erreurs), minutage, enveloppe, LFSR, cris (déterminisme, durée, 150 cris distincts, évolution plus grave). 206 tests.
+- Vérifié dans Electron : aucune erreur console, passage route_1 → battle_wild → cave.
+
+Reste
+- L’écoute (absence de craquement, stabilité du tempo sur 5 minutes, effet sans coupure audible) n’a pas pu être jugée à l’oreille pendant la session : à valider en jouant. La conception vise ces critères (rampes d’attaque et de relâche de 2 à 4 ms, ordonnancement sur l’horloge audio, emprunt limité aux voies de l’effet).
+- `intro_professor` et `ending` seront appelées par les scripts des prompts 09 et 11.
+
+Décisions
+- Commandes du format choisies pour ne pas se confondre avec les notes : `P` rapport cyclique, `S` enveloppe, `H` glissando (`D`, `E`, `G` sont des noms de notes).
+- 30 pistes au lieu de 18 : les 7 jingles et 3 boucles de repérage sont des pistes à part. La musique de la carte maison passe de `house` (inexistante) à `hometown`.
+- La piste de carte reprend là où elle s’était arrêtée après un combat ; elle repart du début en changeant de carte.
+- Pas de musique propre à la scène d’évolution : la musique en cours continue, puis le jingle d’évolution.
+- `window.debugGame.audio` exposé en mode dev pour les vérifications automatiques.
 
 Problèmes connus
 - Aucun.

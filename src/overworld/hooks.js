@@ -15,6 +15,8 @@ const defaults = {
   /** Starter choice. Resolves with a creature id. */
   chooseStarter: async () => 'fenouillot',
   healParty() {},
+  /** Volumes of the options, 0 to 1. */
+  setVolumes() {},
   /**
    * Saves the game; resolves true on success. Interim: browser storage. Prompt 12 replaces it
    * with the atomic save file of the main process.

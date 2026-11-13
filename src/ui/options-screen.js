@@ -7,6 +7,7 @@ import {
   BATTLE_STYLES, OPTION_LIMITS, TEXT_SPEED_IDS, getOptions, normalizeOptions, setOptions,
 } from '../state/options.js';
 import { setTextSpeed } from './dialog-box.js';
+import { hooks } from '../overworld/hooks.js';
 import { PromiseScene, moveCursor } from './menu-cursor.js';
 import { drawWindowFrame } from './window-frame.js';
 
@@ -24,6 +25,7 @@ export function registerOptionTargets(next) {
 /** Applies options to the running game (text speed, palette, keys, window). */
 export function applyOptions(options = getOptions()) {
   setTextSpeed(options.textSpeed);
+  hooks.setVolumes(options.musicVolume / 10, options.sfxVolume / 10);
   if (PALETTES.some((palette) => palette.id === options.palette)) setActivePalette(options.palette);
   if (options.keyBindings) targets.input?.setKeyBindings(options.keyBindings);
   window.bestiora?.setWindowScale?.(options.windowScale);
