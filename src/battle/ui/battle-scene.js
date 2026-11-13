@@ -251,7 +251,7 @@ export class BattleScene {
   /** Shows a text widget. wait: true = needs A at the end; false = advances alone. */
   say(key, variables = {}, { wait = true } = {}) {
     const template = BATTLE_TEXTS[key] ?? getText(key);
-    const text = applyVariables(template, { PLAYER: this.playerName, ...variables });
+    const text = applyVariables(template, { PLAYER: this.playerName, RIVAL: this.gameState.rival?.name, ...variables });
     return this.runWidget(new MessageBox(text, wait));
   }
 

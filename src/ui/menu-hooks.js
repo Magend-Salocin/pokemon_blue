@@ -7,6 +7,7 @@ import { openPartyMenu } from './party-menu.js';
 import { openDaycare } from './services.js';
 import { openShop } from './shop-menu.js';
 import { openStorage } from './storage-menu.js';
+import { chooseStarter } from './starter-choice.js';
 
 export function installMenuHooks(manager, getState = getGameState) {
   const menus = {
@@ -18,6 +19,7 @@ export function installMenuHooks(manager, getState = getGameState) {
     bestiary: () => openBestiary(manager, getState()),
   };
   setHooks({
+    chooseStarter: () => chooseStarter(manager),
     openMenu: async (menu, params = {}) => {
       const open = menus[menu];
       if (!open) throw new Error(`Unknown menu: ${menu}`);

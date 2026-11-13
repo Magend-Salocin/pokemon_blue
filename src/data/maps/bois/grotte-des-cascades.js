@@ -1,0 +1,67 @@
+// Grotte des Cascades, level 1: entrance from Route 3 (bottom), ladder down to level 2 (top right).
+// Pools and cascades (~) cannot be crossed yet.
+export default {
+  id: 'grotte_des_cascades',
+  name: 'Grotte des Cascades',
+  tileset: 'cave',
+  music: 'cave',
+  dark: false,
+  layers: {
+    ground: [
+      '############################',
+      '#...~~~.....######.........#',
+      '#.A.~~~..A..######..A....D.#',
+      '#...~~~.....######.........#',
+      '#...~~~.........A....####..#',
+      '##..~~~.....A........####..#',
+      '##..~~~..####.....~~~......#',
+      '#...~~~..####.....~~~...A..#',
+      '#...~~~...........~~~......#',
+      '#..........A......~~~..#####',
+      '####......~~~~....~~~..#####',
+      '#.........~~~~.........~~~.#',
+      '#..A......~~~~.....A...~~~.#',
+      '#.....#####........#...~~~.#',
+      '#.....#####...A....#...~~~.#',
+      '#..~~.........~~~..#.......#',
+      '#..~~...A.....~~~..####..A.#',
+      '#.............~~~..........#',
+      '######..####..........######',
+      '#.........##.....A.........#',
+      '#...A.........###..........#',
+      '#############.##############',
+    ],
+  },
+  encounters: {
+    rate: 8,
+    cave: [
+      { creature: 'caillotin', minLevel: 9, maxLevel: 11, weight: 25 },
+      { creature: 'noctule', minLevel: 9, maxLevel: 11, weight: 25 },
+      { creature: 'fouisseron', minLevel: 10, maxLevel: 12, weight: 15 },
+      { creature: 'salamoue', minLevel: 9, maxLevel: 12, weight: 12 },
+      { creature: 'quartzelle', minLevel: 10, maxLevel: 12, weight: 10 },
+      { creature: 'goujonet', minLevel: 10, maxLevel: 12, weight: 8 },
+      { creature: 'grenaillon', minLevel: 12, maxLevel: 12, weight: 5 },
+    ],
+  },
+  warps: [
+    { x: 13, y: 21, to: 'route_3', toX: 9, toY: 2 },
+    { x: 25, y: 2, to: 'grotte_des_cascades_2', toX: 2, toY: 17 },
+  ],
+  npcs: [],
+  trainers: [
+    { id: 'randonneur_yves', sprite: 'randonneur', x: 16, y: 19, facing: 'left', sight: 3, trainer: 'randonneur_yves' },
+    { id: 'montagnard_gaston', sprite: 'montagnard', x: 9, y: 8, facing: 'down', sight: 3, trainer: 'montagnard_gaston' },
+    { id: 'randonneuse_leonie', sprite: 'dresseuse', x: 19, y: 3, facing: 'down', sight: 4, trainer: 'randonneuse_leonie' },
+    { id: 'montagnard_firmin', sprite: 'montagnard', x: 24, y: 15, facing: 'left', sight: 4, trainer: 'montagnard_firmin' },
+  ],
+  signs: [],
+  items: [
+    { x: 1, y: 19, item: 'fil_dariane', flag: 'item_grotte_des_cascades_1' },
+    { x: 26, y: 1, item: 'potion', flag: 'item_grotte_des_cascades_2' },
+  ],
+  // The vitamin hides in the far corner behind the first cascade.
+  hiddenItems: [{ x: 1, y: 1, item: 'ecorce_dure', flag: 'hidden_grotte_des_cascades_1' }],
+  triggers: [],
+  connections: {},
+};

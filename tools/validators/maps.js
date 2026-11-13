@@ -204,13 +204,40 @@ export function checkTrainers(data) {
     seen.add(trainer.id);
     if (!data.trainerClasses.some((entry) => entry.id === trainer.class)) errors.push(`${label} : classe inconnue « ${trainer.class} »`);
     if (!(trainer.party?.length >= 1 && trainer.party.length <= 6)) errors.push(`${label} : équipe de 1 à 6 bestioles`);
-    for (const member of trainer.party ?? []) {
+    const parties = [trainer.party ?? [], ...Object.values(trainer.partyByStarter ?? {})];
+    for (const member of parties.flat()) {
       if (!data.creatures.some((entry) => entry.id === member.creature)) errors.push(`${label} : bestiole inconnue « ${member.creature} »`);
       if (!(member.level >= 1 && member.level <= 100)) errors.push(`${label} : niveau invalide`);
+      for (const move of member.moves ?? []) {
+        if (!data.moves.some((entry) => entry.id === move)) errors.push(`${label} : attaque inconnue « ${move} »`);
+      }
     }
-    for (const field of ['intro', 'defeat', 'after']) {
+    for (const field of ['intro', 'defeat', 'after', ...(trainer.lastText ? ['lastText'] : [])]) {
       if (data.texts[trainer[field]] === undefined) errors.push(`${label} : texte ${field} inconnu « ${trainer[field]} »`);
     }
   }
+  errors.push(...checkTrainersReachable(data));
   return errors;
+}
+
+/** Trainer ids used by `battle` commands of a script, nested lists included. */
+function battleTrainers(commands, found = new Set()) {
+  if (!Array.isArray(commands)) return found;
+  for (const command of commands) {
+    if (command?.cmd === 'battle') found.add(command.trainer);
+    for (const value of Object.values(command ?? {})) if (Array.isArray(value)) battleTrainers(value, found);
+  }
+  return found;
+}
+
+/** Every trainer must stand on a map or be fought from a script. */
+function checkTrainersReachable(data) {
+  const used = new Set();
+  Object.values(data.scripts).forEach((commands) => battleTrainers(commands, used));
+  for (const map of Object.values(data.maps)) {
+    (map.trainers ?? []).forEach((entry) => used.add(entry.trainer));
+    Object.values(map.scripts ?? {}).forEach((commands) => battleTrainers(commands, used));
+    [...(map.npcs ?? []), ...(map.triggers ?? [])].forEach((entry) => battleTrainers(entry.script, used));
+  }
+  return data.trainers.filter((trainer) => !used.has(trainer.id)).map((trainer) => `dresseur ${trainer.id} : utilisé par aucune carte ni aucun script`);
 }

@@ -30,10 +30,11 @@ function fakeContext({ answers = [], outcomes = [] } = {}) {
     openMenu: async (menu) => { log.push(`menu:${menu}`); },
     getScript: (name) => ({ sub: [{ cmd: 'say', text: 'from_sub' }] })[name],
     setRivalName: async () => {},
-    chooseStarter: async () => {},
+    chooseStarter: async () => 'braisille',
     healParty: () => log.push('heal'),
     itemName: (id) => id.toUpperCase(),
     creatureName: (id) => id,
+    createCreature: (species, level) => ({ species, level }),
   };
   return ctx;
 }
@@ -77,6 +78,24 @@ test('a lost battle with blackout stops the script; onLose continue does not', a
   ]);
   assert.deepEqual(ctx.log, ['battle:rival_1', 'say:after_first', 'battle:rival_2', 'blackout']);
   assert.equal(stopped.stopped, true);
+});
+
+test('battle runs `won` or `lost` depending on the outcome', async () => {
+  const ctx = fakeContext({ outcomes: ['lose', 'win'] });
+  const branch = { won: [{ cmd: 'say', text: 'won' }], lost: [{ cmd: 'say', text: 'lost' }] };
+  await createScriptRunner(ctx).run([
+    { cmd: 'battle', trainer: 'rival_1', onLose: 'continue', ...branch },
+    { cmd: 'battle', trainer: 'rival_1', onLose: 'continue', ...branch },
+  ]);
+  assert.deepEqual(ctx.log, ['battle:rival_1', 'say:lost', 'battle:rival_1', 'say:won']);
+});
+
+test('choose_starter gives the creature and records the choice', async () => {
+  const ctx = fakeContext();
+  await createScriptRunner(ctx).run([{ cmd: 'choose_starter' }]);
+  assert.equal(ctx.state.starter, 'braisille');
+  assert.ok(hasFlag(ctx.state, 'starter_braisille'));
+  assert.deepEqual(ctx.state.party, [{ species: 'braisille', level: 5 }]);
 });
 
 test('end stops the script and async moves are awaited', async () => {

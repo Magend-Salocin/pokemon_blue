@@ -1,0 +1,93 @@
+// Route 3: from the Bois Murmurant (south warp) to the Grotte des Cascades (north, in the cliff).
+// Tileset 'town' (outdoor tiles + buildings) for the rest house. The west channel is a one-way
+// shortcut back south over the ledges. A guard turns the player back without the Roche badge.
+export default {
+  id: 'route_3',
+  name: 'Route 3',
+  tileset: 'town',
+  music: 'route_2',
+  border: 'T',
+  layers: {
+    ground: [
+      'TT################TT',
+      'TT################TT',
+      'TT#######:########TT',
+      'TT..,,...:........TT',
+      'TT..,,...:........TT',
+      'TT.......:::::....TT',
+      'TT......TT...:....TT',
+      'TTvvvvvvTT...:....TT',
+      'TT......TT...:,,,.TT',
+      'TT.,,,,.TT,,,:,,,.TT',
+      'TT.,,,,.TT,,,:....TT',
+      'TT......TT...:..S.TT',
+      'TT..*...TT...:....TT',
+      'TT......TT...:....TT',
+      'TT~~|~~~~~~~~|~~~~TT',
+      'TT~~|~~~~~~~~|~~~~TT',
+      'TT..:...TT...:.~~.TT',
+      'TT..:,,.TT,,.:.~~.TT',
+      'TT..:,,.TT,,.:.==.TT',
+      'TT..:,,.TT,,.:.~~.TT',
+      'TT..:...TT...:.~~.TT',
+      'TT..:...TT,,.:....TT',
+      'TT..:,,.TT,,.:....TT',
+      'TT..:,,.TT...:,,..TT',
+      'TT..:........:,,..TT',
+      'TT..:........:....TT',
+      'TT..::::::::::....TT',
+      'TT........::......TT',
+      'TTTTTTTTTT::TTTTTTTT',
+      'TTTTTTTTTT::TTTTTTTT',
+    ],
+  },
+  structures: [{ type: 'house_a', x: 14, y: 3, width: 4, door: 1 }],
+  encounters: {
+    rate: 10,
+    grass: [
+      { creature: 'pivelin', minLevel: 8, maxLevel: 10, weight: 20 },
+      { creature: 'noisetin', minLevel: 8, maxLevel: 10, weight: 20 },
+      { creature: 'faonille', minLevel: 8, maxLevel: 11, weight: 15 },
+      { creature: 'nymphot', minLevel: 8, maxLevel: 11, weight: 15 },
+      { creature: 'venimot', minLevel: 8, maxLevel: 10, weight: 12 },
+      { creature: 'salamoue', minLevel: 9, maxLevel: 11, weight: 10 },
+      { creature: 'goujonet', minLevel: 10, maxLevel: 12, weight: 8 },
+    ],
+  },
+  warps: [
+    { x: 10, y: 29, to: 'bois_murmurant', toX: 20, toY: 0 },
+    { x: 11, y: 29, to: 'bois_murmurant', toX: 21, toY: 0 },
+    { x: 9, y: 2, to: 'grotte_des_cascades', toX: 13, toY: 21 },
+    { x: 15, y: 5, to: 'maison_route_3', toX: 3, toY: 7 },
+  ],
+  npcs: [
+    { id: 'garde_grotte', sprite: 'montagnard', x: 10, y: 3, facing: 'left', movement: 'static', script: [
+      { cmd: 'if_badge', badge: 'roche', then: [{ cmd: 'say', text: 'route_3_garde_ok' }], else: [{ cmd: 'say', text: 'route_3_garde' }] },
+    ] },
+  ],
+  trainers: [
+    { id: 'ecolier_anatole', sprite: 'gamin', x: 6, y: 4, facing: 'right', sight: 3, trainer: 'ecolier_anatole' },
+    { id: 'randonneur_marcel', sprite: 'randonneur', x: 17, y: 10, facing: 'left', sight: 4, trainer: 'randonneur_marcel' },
+    { id: 'pecheur_gilles', sprite: 'pecheur', x: 10, y: 13, facing: 'right', sight: 3, trainer: 'pecheur_gilles' },
+    { id: 'pecheur_armand', sprite: 'pecheur', x: 17, y: 16, facing: 'left', sight: 4, trainer: 'pecheur_armand' },
+    { id: 'randonneuse_alix', sprite: 'dresseuse', x: 2, y: 20, facing: 'right', sight: 2, trainer: 'randonneuse_alix' },
+    { id: 'gamin_noe', sprite: 'gamin', x: 16, y: 24, facing: 'left', sight: 3, trainer: 'gamin_noe' },
+  ],
+  signs: [{ x: 16, y: 11, text: 'sign_route_3' }],
+  items: [
+    { x: 2, y: 3, item: 'capsule', flag: 'item_route_3_1' },
+    { x: 17, y: 18, item: 'potion', flag: 'item_route_3_2' },
+    { x: 2, y: 16, item: 'repulsif', flag: 'item_route_3_3' },
+  ],
+  hiddenItems: [{ x: 2, y: 13, item: 'sel_eveil', flag: 'hidden_route_3_1' }],
+  // The badge is not a flag: a plain trigger in front of the cave mouth pushes the player back.
+  triggers: [{ x: 9, y: 3, w: 1, h: 1, script: [{ cmd: 'call', script: 'garde_grotte' }] }],
+  connections: {},
+  scripts: {
+    garde_grotte: [{ cmd: 'if_badge', badge: 'roche', else: [
+      { cmd: 'face', actor: 'garde_grotte', direction: 'player' },
+      { cmd: 'say', text: 'route_3_garde' },
+      { cmd: 'move', actor: 'player', path: ['down'] },
+    ] }],
+  },
+};

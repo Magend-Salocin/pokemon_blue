@@ -2,6 +2,7 @@
 // transition, runs the battle scene, then the evolutions, and returns the result.
 import { createRng } from '../../engine/rng.js';
 import { TRAINER_CLASSES_BY_ID } from '../../data/trainer-classes.js';
+import { trainerParty } from '../../data/trainers.js';
 import { BattleTransitionScene } from '../../overworld/battle-stub.js';
 import { setHooks } from '../../overworld/hooks.js';
 import { getGameState, healParty, isPartyAlive } from '../../state/game-state.js';
@@ -10,23 +11,24 @@ import { createCreature } from '../logic/creature.js';
 import { BattleScene } from './battle-scene.js';
 
 /** Battle options for a trainer of src/data/trainers.js. */
-export function trainerBattleConfig(trainer) {
+export function trainerBattleConfig(trainer, state = getGameState()) {
   const trainerClass = TRAINER_CLASSES_BY_ID[trainer.class];
   return {
     id: trainer.id,
     class: trainer.class,
     className: trainerClass?.name ?? '',
-    name: trainer.name,
+    name: trainer.class === 'rival' ? state.rival.name : trainer.name,
     moneyBase: trainerClass?.moneyBase ?? 0,
     ai: trainer.ai,
     portrait: trainer.portrait ?? trainerClass?.portrait ?? 'portrait/dresseur',
     defeat: trainer.defeat,
+    lastText: trainer.lastText,
     music: trainer.music,
   };
 }
 
-export function buildTrainerParty(trainer, rng) {
-  return trainer.party.map((member) => createCreature(member.creature, member.level, rng, { moves: member.moves }));
+export function buildTrainerParty(trainer, rng, starter = getGameState().starter) {
+  return trainerParty(trainer, starter).map((member) => createCreature(member.creature, member.level, rng, { moves: member.moves }));
 }
 
 /**
@@ -68,8 +70,8 @@ export function installBattleHooks(manager, { getState = getGameState } = {}) {
   setHooks({
     startBattle: (trainer, { onLose = 'blackout', music } = {}) => runBattle(manager, {
       kind: 'trainer',
-      enemyParty: buildTrainerParty(trainer, rng),
-      trainer: trainerBattleConfig(trainer),
+      enemyParty: buildTrainerParty(trainer, rng, getState().starter),
+      trainer: trainerBattleConfig(trainer, getState()),
       music,
       onLose,
     }, { state: getState(), rng }),

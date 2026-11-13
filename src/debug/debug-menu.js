@@ -1,8 +1,9 @@
 // Debug menu (F1, dev only): battles against any species or a random AI team, test party, heal,
-// jukebox (tracks, sound effects, the cry of the selected species).
+// teleport to any game map, next badge with its field item, jukebox (tracks, sound effects, cries).
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../engine/constants.js';
 import { createRng } from '../engine/rng.js';
 import { CREATURES } from '../data/creatures.js';
+import { MAPS } from '../data/maps/index.js';
 import { drawText } from '../gfx/font.js';
 import { getColor } from '../gfx/palette.js';
 import { createCreature } from '../battle/logic/creature.js';
@@ -10,19 +11,30 @@ import { hooks } from '../overworld/hooks.js';
 import { AtlasViewerScene } from './atlas-viewer-scene.js';
 import { SFX } from '../audio/sfx.js';
 import { TRACKS } from '../audio/tracks/index.js';
-import { addItem, getGameState, healParty } from '../state/game-state.js';
+import { addBadge, addItem, getGameState, healParty, setFlag } from '../state/game-state.js';
 import { PromiseScene, moveCursor } from '../ui/menu-cursor.js';
 import { drawWindowFrame } from '../ui/window-frame.js';
 
-const ROWS = ['species', 'level', 'wild', 'trainer', 'party', 'heal', 'music', 'sfx', 'cry', 'atlas', 'close'];
+const ROWS = ['species', 'level', 'wild', 'trainer', 'party', 'heal', 'map', 'badge', 'music', 'sfx', 'cry', 'atlas', 'close'];
+const MAP_IDS = Object.keys(MAPS);
+/** Badges in arena order, with the field item unlocked at that point of the story. */
+const BADGE_STEPS = [
+  { badge: 'roche' },
+  { badge: 'eau', item: 'machette' },
+  { badge: 'foudre', item: 'lanterne' },
+  { badge: 'flore', item: 'grappin' },
+];
 const TRACK_IDS = Object.keys(TRACKS);
 const SFX_IDS = SFX.map((effect) => effect.id);
 const TEST_PARTY = ['fenouvert', 'ondeclat', 'fournaise'];
 
 export class DebugMenuScene extends PromiseScene {
-  constructor(state = getGameState()) {
+  /** warp(mapId): teleports the player (provided by the overworld). */
+  constructor(state = getGameState(), { warp = null } = {}) {
     super();
     this.state = state;
+    this.warp = warp;
+    this.mapIndex = 0;
     this.index = 0;
     this.speciesIndex = 9;
     this.level = 10;
@@ -42,6 +54,7 @@ export class DebugMenuScene extends PromiseScene {
     const delta = (input.repeat('right') ? 1 : 0) - (input.repeat('left') ? 1 : 0);
     if (row === 'species' && delta) this.speciesIndex = (this.speciesIndex + delta + CREATURES.length) % CREATURES.length;
     if (row === 'level' && delta) this.level = Math.max(1, Math.min(100, this.level + delta * (input.isDown('select') ? 10 : 1)));
+    if (row === 'map' && delta && MAP_IDS.length) this.mapIndex = (this.mapIndex + delta + MAP_IDS.length) % MAP_IDS.length;
     if (row === 'music' && delta) this.trackIndex = (this.trackIndex + delta + TRACK_IDS.length) % TRACK_IDS.length;
     if (row === 'sfx' && delta) this.sfxIndex = (this.sfxIndex + delta + SFX_IDS.length) % SFX_IDS.length;
     if (input.justPressed('b')) this.done(null);
@@ -65,6 +78,16 @@ export class DebugMenuScene extends PromiseScene {
     } else if (row === 'heal') {
       healParty(this.state);
       this.message = 'Équipe soignée.';
+    } else if (row === 'map' && this.warp && MAP_IDS.length) {
+      this.done(null);
+      this.warp(MAP_IDS[this.mapIndex]);
+    } else if (row === 'badge') {
+      const next = BADGE_STEPS.find((step) => !this.state.badges.includes(step.badge));
+      if (!next) return;
+      addBadge(this.state, next.badge);
+      setFlag(this.state, 'has_bestiary');
+      if (next.item) addItem(this.state, next.item);
+      this.message = `Badge ${next.badge}${next.item ? ` + ${next.item}` : ''}`;
     } else if (row === 'music') {
       hooks.playMusic(TRACK_IDS[this.trackIndex]);
     } else if (row === 'sfx') {
@@ -104,6 +127,8 @@ export class DebugMenuScene extends PromiseScene {
       trainer: 'Dresseur IA',
       party: 'Équipe de test',
       heal: 'Soigner',
+      map: `Carte ${MAP_IDS[this.mapIndex] ?? '-'}`.slice(0, 18),
+      badge: 'Badge suivant',
       music: `Piste ${TRACK_IDS[this.trackIndex]}`.slice(0, 18),
       sfx: `Effet ${SFX_IDS[this.sfxIndex]}`.slice(0, 18),
       cry: `Cri ${this.species.name}`,
@@ -111,10 +136,10 @@ export class DebugMenuScene extends PromiseScene {
       close: 'Fermer',
     };
     ROWS.forEach((row, index) => {
-      const y = 14 + index * 10;
+      const y = 14 + index * 9;
       if (index === this.index) drawText(ctx, '▶', 8, y);
       drawText(ctx, labels[row], 16, y);
     });
-    drawText(ctx, this.message, 8, 128);
+    drawText(ctx, this.message.slice(0, 18), 8, 132);
   }
 }

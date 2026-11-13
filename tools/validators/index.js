@@ -3,6 +3,7 @@
 import { checkAudio } from './audio.js';
 import { checkCreatures } from './creatures.js';
 import { checkEvolutions } from './evolutions.js';
+import { checkFlags } from './flags.js';
 import { checkIds } from './ids.js';
 import { checkItems, checkTrainerClasses } from './items.js';
 import { checkMoves } from './moves.js';
@@ -24,6 +25,7 @@ export const CHECKERS = [
   { name: 'Dresseurs', run: checkTrainers },
   { name: 'Scripts globaux', run: checkGlobalScripts },
   { name: 'Cartes', run: checkMaps },
+  { name: 'Drapeaux', run: checkFlags },
   { name: 'Audio', run: checkAudio },
 ];
 

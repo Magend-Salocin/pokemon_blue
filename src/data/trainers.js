@@ -1,16 +1,16 @@
-// Individual trainers. Stub for prompt 04: the content prompts (09 to 11) fill this list.
+// Trainer registry. Each zone file of src/data/trainers/ exports a list built with helpers.js.
 // Texts are ids from src/data/texts/. `after` is said when talked to once defeated.
+import debut from './trainers/debut.js';
+import bois from './trainers/bois.js';
+import port from './trainers/port.js';
+import cendrelune from './trainers/cendrelune.js';
+import test from './trainers/test.js';
 
-export const TRAINERS = [
-  {
-    id: 'test_gamin',
-    class: 'gamin',
-    name: 'Léo',
-    party: [{ creature: 'musaraille', level: 5 }, { creature: 'pivelin', level: 5 }, { creature: 'feuillarve', level: 6 }],
-    intro: 'test_gamin_intro',
-    defeat: 'test_gamin_defeat',
-    after: 'test_gamin_after',
-  },
-];
+export const TRAINERS = [...debut, ...bois, ...port, ...cendrelune, ...test];
 
 export const TRAINERS_BY_ID = Object.fromEntries(TRAINERS.map((trainer) => [trainer.id, trainer]));
+
+/** Party for this battle: rivals adapt to the player's starter. */
+export function trainerParty(trainer, playerStarter) {
+  return trainer.partyByStarter?.[playerStarter] ?? trainer.party;
+}

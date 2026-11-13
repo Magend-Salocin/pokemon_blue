@@ -88,7 +88,27 @@ export const OBJECT_SPRITES = {
   ],
 };
 
-/** Atlas frames: "<id>/<direction>/<frame>" for characters, "<id>" for objects. */
+/** Electric gate of the Foudre arena, removed by its floor switch. */
+OBJECT_SPRITES.barriere = [
+  '................',
+  '.33..........33.',
+  '3113........3113',
+  '31133......33113',
+  '3113.3....3.3113',
+  '3113..3..3..3113',
+  '3113...33...3113',
+  '3113..3..3..3113',
+  '3113.3....3.3113',
+  '31133......33113',
+  '3113.3....3.3113',
+  '3113..3..3..3113',
+  '3223...33...3223',
+  '3223........3223',
+  '3333........3333',
+  '................',
+];
+
+/** Atlas frames: "<id>/<direction>/<frame>" for characters and objects, plus "<id>" for objects. */
 export function buildCharacterFrames() {
   const frames = {};
   for (const [id, config] of Object.entries(CHARACTER_CONFIGS)) {
@@ -99,6 +119,12 @@ export function buildCharacterFrames() {
       });
     }
   }
-  for (const [id, rows] of Object.entries(OBJECT_SPRITES)) frames[id] = rows;
+  // Objects also get character frames, so a map can place them as static actors (boulders, gates).
+  for (const [id, rows] of Object.entries(OBJECT_SPRITES)) {
+    frames[id] = rows;
+    for (const direction of ['down', 'up', 'left']) {
+      for (const frame of [0, 1]) frames[`${id}/${direction}/${frame}`] = rows;
+    }
+  }
   return frames;
 }

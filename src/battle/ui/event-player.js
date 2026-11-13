@@ -55,6 +55,8 @@ export class EventPlayer {
     const { scene } = this;
     const side = event.side;
     if (side === 1 && this.battle.kind === 'trainer') {
+      const isLast = event.index > 0 && event.index === this.battle.sides[1].party.length - 1;
+      if (isLast && scene.trainer?.lastText) await this.say(scene.trainer.lastText);
       await scene.offerSwitchBeforeEnemy(event);
       await this.say('trainer_sends', { TRAINER: scene.trainerTitle, CREATURE: creatureName(this.creatureAt(1, event.index)) });
     } else if (side === 0) {

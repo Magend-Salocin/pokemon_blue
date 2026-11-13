@@ -15,7 +15,8 @@
     "dist": "node tools/not-implemented.js dist",
     "bestiary": "node tools/export-bestiary-md.js",
     "map-preview": "node tools/map-preview.js",
-    "simulate": "node tools/simulate-battle.js"
+    "simulate": "node tools/simulate-battle.js",
+    "balance": "node tools/balance-check.js"
   },
   "repository": {
     "type": "git",

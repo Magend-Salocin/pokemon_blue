@@ -648,9 +648,7 @@ export class OverworldScene {
         const name = await hooks.nameRival();
         if (name) this.state.rival.name = name;
       },
-      chooseStarter: async () => {
-        this.state.starter = await hooks.chooseStarter();
-      },
+      chooseStarter: () => hooks.chooseStarter(),
       healParty: () => hooks.healParty(),
       itemName: (id) => this.itemName(id),
       itemPocket: (id) => ITEMS_BY_ID[id]?.pocket,

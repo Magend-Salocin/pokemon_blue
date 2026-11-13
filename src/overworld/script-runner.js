@@ -28,7 +28,7 @@ export const SCRIPT_COMMANDS = {
   give_money: { amount: 'number' },
   give_badge: { badge: 'badge' },
   heal_party: {},
-  battle: { trainer: 'trainer', onLose: 'any?' },
+  battle: { trainer: 'trainer', onLose: 'any?', won: 'script?', lost: 'script?' },
   wild_battle: { creature: 'creature', level: 'number' },
   warp: { map: 'map', x: 'number', y: 'number', facing: 'direction?' },
   show_actor: { actor: 'actor' },
@@ -49,6 +49,7 @@ export const SCRIPT_COMMANDS = {
 export const MENUS = ['shop', 'storage', 'daycare', 'party', 'bag', 'bestiary'];
 
 const STOP = Symbol('stop');
+const STARTER_LEVEL = 5;
 
 export function createScriptRunner(ctx) {
   const pendingMoves = [];
@@ -106,7 +107,7 @@ export function createScriptRunner(ctx) {
         await ctx.blackout();
         return STOP;
       }
-      return undefined;
+      return runList(outcome === 'lose' ? c.lost : c.won);
     },
     wild_battle: async (c) => {
       const outcome = await ctx.wildBattle(c.creature, c.level);
@@ -130,7 +131,13 @@ export function createScriptRunner(ctx) {
     trade: async (c) => {
       if ((await ctx.trade(c.wanted, c.offer)) && c.flag) setFlag(state, c.flag);
     },
-    choose_starter: () => ctx.chooseStarter(),
+    choose_starter: async () => {
+      const species = await ctx.chooseStarter();
+      state.starter = species;
+      setFlag(state, `starter_${species}`);
+      addCreature(state, ctx.createCreature(species, STARTER_LEVEL));
+      await ctx.say('got_creature', { CREATURE: ctx.creatureName(species) });
+    },
     end: () => STOP,
   };
 

@@ -33,6 +33,7 @@ export const TRAINER_CLASSES = [
   trainerClass('danseuse', 'Danseuse', 'portrait/danseuse', 30),
   trainerClass('sbire_opale', 'Sbire Opale', 'portrait/sbire_opale', 30, 'villain'),
   trainerClass('sbire_opale_f', 'Sbire Opale', 'portrait/sbire_opale_f', 30, 'villain'),
+  trainerClass('lieutenant_opale', 'Lieutenant', 'portrait/sbire_opale', 60, 'villain'),
   trainerClass('fondateur_opale', 'Fondateur', 'portrait/corvin', 100, 'villain'),
   trainerClass('rival', '', 'portrait/rival', 50, 'rival'),
   trainerClass('champion', 'Champion', null, 100, 'leader'),

@@ -41,7 +41,9 @@ function createWindow() {
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   win.webContents.on('will-navigate', (event) => event.preventDefault());
 
-  win.loadFile(path.join(__dirname, '..', 'src', 'index.html'));
+  // --newgame (with --dev): start on the title screen instead of the test map.
+  const query = process.argv.includes('--newgame') ? { newgame: '1' } : {};
+  win.loadFile(path.join(__dirname, '..', 'src', 'index.html'), { query });
 
   if (isDev) {
     // Not activated: the game pauses when its window loses focus.

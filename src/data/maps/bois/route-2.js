@@ -1,0 +1,63 @@
+// Route 2: from Bourg-Sablon (west, rows 8-9) to the edge of the Bois Murmurant (east warp).
+// The main path loops south; the north corridor leads back west over the ledges (shortcut).
+export default {
+  id: 'route_2',
+  name: 'Route 2',
+  tileset: 'outdoor',
+  music: 'route_2',
+  border: 'T',
+  layers: {
+    ground: [
+      'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+      'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+      'TT..,,,,....TT..,,,,,,....TTTTTT',
+      'TT..,,,,....TT..,,,,,,....TTTTTT',
+      'TT::::::::::::::::::::::::::::::',
+      'TT::::::::::::::::::::::::::::::',
+      'TTvvvvvvvvvvTTTTTTTTTTTTTT::TTTT',
+      'TT..........TTTTTTTTTTTTTT::TTTT',
+      '::::::::::..TT,,,,,,..TT..::..TT',
+      '::::::::::..TT,,,,,,..TT..::..TT',
+      'TT..**..::S...,,,,,,......::..TT',
+      'TT..**..::....,,,,,,......::..TT',
+      'TT......::::::::::::::::::::..TT',
+      'TT..TT..,,,,..TT....,,,,..,,..TT',
+      'TT..TT..,,,,..TT....,,,,..,,..TT',
+      'TT............................TT',
+      'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+      'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+    ],
+  },
+  encounters: {
+    rate: 10,
+    grass: [
+      { creature: 'pivelin', minLevel: 3, maxLevel: 6, weight: 30 },
+      { creature: 'musaraille', minLevel: 3, maxLevel: 6, weight: 25 },
+      { creature: 'noisetin', minLevel: 4, maxLevel: 6, weight: 15 },
+      { creature: 'bousiot', minLevel: 4, maxLevel: 6, weight: 10 },
+      { creature: 'morillon', minLevel: 4, maxLevel: 6, weight: 8 },
+      { creature: 'venimot', minLevel: 5, maxLevel: 7, weight: 7 },
+      { creature: 'glandor', minLevel: 5, maxLevel: 7, weight: 5 },
+    ],
+  },
+  warps: [
+    { x: 31, y: 4, to: 'bois_murmurant', toX: 1, toY: 28 },
+    { x: 31, y: 5, to: 'bois_murmurant', toX: 1, toY: 29 },
+  ],
+  npcs: [],
+  trainers: [
+    { id: 'gamin_bastien', sprite: 'gamin', x: 11, y: 9, facing: 'left', sight: 3, trainer: 'gamin_bastien' },
+    { id: 'fillette_lison', sprite: 'fillette', x: 18, y: 13, facing: 'up', sight: 2, trainer: 'fillette_lison' },
+    { id: 'campeur_hugo', sprite: 'gamin', x: 24, y: 11, facing: 'down', sight: 1, trainer: 'campeur_hugo' },
+    { id: 'campeuse_ines', sprite: 'campeuse', x: 29, y: 10, facing: 'left', sight: 2, trainer: 'campeuse_ines' },
+    { id: 'ecolier_timothee', sprite: 'gamin', x: 15, y: 2, facing: 'down', sight: 3, trainer: 'ecolier_timothee' },
+  ],
+  signs: [{ x: 10, y: 10, text: 'sign_route_2' }],
+  items: [
+    { x: 2, y: 2, item: 'antidote', flag: 'item_route_2_1' },
+    { x: 29, y: 15, item: 'potion', flag: 'item_route_2_2' },
+  ],
+  hiddenItems: [{ x: 4, y: 11, item: 'repulsif', flag: 'hidden_route_2_1' }],
+  triggers: [],
+  connections: { west: 'bourg_sablon' },
+};

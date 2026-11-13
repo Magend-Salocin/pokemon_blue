@@ -1,0 +1,75 @@
+// Route 4: coastal road between Port-Ondine (west) and the Route 5 (east), with the Pension.
+// Shortcut: the ledges of row 7 drop from the dunes straight onto the main road.
+// Secret: a hidden item in the clearing behind the trees of the north-east corner.
+export default {
+  id: 'route_4',
+  name: 'Route 4',
+  tileset: 'outdoor',
+  music: 'route_2',
+  border: 'T',
+  layers: {
+    ground: [
+      'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+      'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+      'TT.....F......,,,,,,,,TTTTTT..TT',
+      'TT.....F......,,,,,,,,TTTTTT..TT',
+      'TT.....F......,,,,,,,,TTTTTT..TT',
+      'TT::::::S::...,,,,,,,,TTTTTT..TT',
+      'TT............................TT',
+      'TTvvvvvvvvvv::vvvvvvvvvvvvvvvvTT',
+      '::::::::::::::::::::::::::::::::',
+      '::::::::::::::::::::::::::::::::',
+      'TTss,,,,,,ssTTsssssssssssssSssTT',
+      'TTss,,,,,,ssTTssss,,,,,,ssssssTT',
+      '##ssssssssssssssss,,,,,,ssssss##',
+      '##ssssssssssssssssssssssssssss##',
+      '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+      '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+      '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+      '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+    ],
+  },
+  structures: [{ type: 'house_a', x: 3, y: 2, width: 4, door: 1 }],
+  encounters: {
+    rate: 10,
+    grass: [
+      { creature: 'crabouille', minLevel: 14, maxLevel: 16, weight: 16 },
+      { creature: 'ombrelle', minLevel: 14, maxLevel: 16, weight: 14 },
+      { creature: 'toisonnet', minLevel: 14, maxLevel: 16, weight: 14 },
+      { creature: 'grivelin', minLevel: 14, maxLevel: 17, weight: 14 },
+      { creature: 'lapugil', minLevel: 14, maxLevel: 17, weight: 12 },
+      { creature: 'salamoue', minLevel: 14, maxLevel: 16, weight: 10 },
+      { creature: 'anguilet', minLevel: 15, maxLevel: 17, weight: 8 },
+      { creature: 'phalenoir', minLevel: 15, maxLevel: 17, weight: 8 },
+      { creature: 'goujarde', minLevel: 18, maxLevel: 18, weight: 4 },
+    ],
+  },
+  warps: [{ x: 4, y: 4, to: 'pension_route_4', toX: 3, toY: 7 }],
+  npcs: [
+    { id: 'promeneur', sprite: 'vieil_homme', x: 25, y: 12, facing: 'down', movement: 'look', script: [{ cmd: 'say', text: 'route_4_promeneur' }] },
+  ],
+  trainers: [
+    { id: 'nageur_bastien', sprite: 'nageur', x: 8, y: 13, facing: 'up', sight: 3, trainer: 'nageur_bastien' },
+    { id: 'nageuse_clara', sprite: 'nageur', x: 22, y: 13, facing: 'left', sight: 4, trainer: 'nageuse_clara' },
+    { id: 'pecheur_marcel', sprite: 'pecheur', x: 15, y: 13, facing: 'up', sight: 2, trainer: 'pecheur_marcel' },
+    { id: 'pecheur_alain', sprite: 'pecheur', x: 28, y: 12, facing: 'left', sight: 3, trainer: 'pecheur_alain' },
+    { id: 'dresseuse_ines', sprite: 'dresseuse', x: 21, y: 6, facing: 'left', sight: 4, trainer: 'dresseuse_ines' },
+    { id: 'campeuse_julie', sprite: 'campeuse', x: 17, y: 2, facing: 'down', sight: 3, trainer: 'campeuse_julie' },
+    { id: 'randonneur_gilles', sprite: 'randonneur', x: 20, y: 9, facing: 'up', sight: 1, trainer: 'randonneur_gilles' },
+  ],
+  signs: [
+    { x: 8, y: 5, text: 'sign_pension_route_4' },
+    { x: 27, y: 10, text: 'sign_route_4' },
+  ],
+  items: [
+    { x: 28, y: 3, item: 'super_capsule', flag: 'item_route_4_1' },
+    { x: 2, y: 13, item: 'potion_forte', flag: 'item_route_4_2' },
+    { x: 11, y: 2, item: 'repulsif', flag: 'item_route_4_3' },
+  ],
+  hiddenItems: [
+    { x: 29, y: 2, item: 'plume_vive', flag: 'hidden_route_4_1' },
+    { x: 14, y: 12, item: 'sel_eveil', flag: 'hidden_route_4_2' },
+  ],
+  triggers: [],
+  connections: { north: null, south: null, east: 'route_5', west: 'port_ondine' },
+};
