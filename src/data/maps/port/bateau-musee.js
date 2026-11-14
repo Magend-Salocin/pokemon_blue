@@ -21,7 +21,7 @@ export default {
   encounters: null,
   warps: [{ x: 5, y: 8, to: 'port_ondine', toX: 16, toY: 11 }],
   npcs: [
-    { id: 'guide', sprite: 'gentleman', x: 4, y: 3, facing: 'down', movement: 'static', script: 'guide' },
+    { id: 'guide', sprite: 'gentleman', x: 6, y: 4, facing: 'down', movement: 'static', script: 'guide' },
     { id: 'visiteuse', sprite: 'fillette', x: 7, y: 6, facing: 'up', movement: 'look', script: [{ cmd: 'say', text: 'bateau_musee_visiteuse' }] },
   ],
   trainers: [

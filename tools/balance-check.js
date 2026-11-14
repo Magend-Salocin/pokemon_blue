@@ -19,11 +19,11 @@ const TARGETS = { champion: [55, 75], rival: [60, 80] };
  * already crossed ('espèce:niveau', evolved by level automatically).
  */
 export const MATCHUPS = [
-  { trainer: 'rival_1', starterLevel: 5, captures: [] },
-  { trainer: 'garance', starterLevel: 12, captures: ['pivelin:10', 'musaraille:10'] },
+  { trainer: 'rival_1', starterLevel: 5, captures: [], playerAi: 'basic' },
+  { trainer: 'garance', starterLevel: 12, captures: ['pivelin:10', 'morillon:10'] },
   { trainer: 'rival_2', starterLevel: 14, captures: ['pivelin:12', 'faonille:12'] },
-  { trainer: 'mael', starterLevel: 20, captures: ['caillotin:17', 'grivelin:18'] },
-  { trainer: 'selene', starterLevel: 25, captures: ['lapugil:23', 'grivelin:23'] },
+  { trainer: 'mael', starterLevel: 20, captures: ['grivelin:18', 'faonille:17'] },
+  { trainer: 'selene', starterLevel: 25, captures: ['fouisseron:23', 'lapugil:23'] },
   { trainer: 'aubin', starterLevel: 30, captures: ['fumelard:28', 'noctulard:28'] },
   { trainer: 'rival_3', starterLevel: 29, captures: ['fumelard:27', 'noctulard:27'] },
 ];
@@ -66,7 +66,7 @@ function simulate(trainer, starter, matchup, rng) {
     const pending = currentPending(state);
     if (pending?.type === 'need_switch') state = chooseSwitch(state, chooseReplacement(state, 0)).state;
     else if (pending?.type === 'learn_move') state = answerLearnMove(state, null).state;
-    else state = resolveTurn(state, chooseAction(state, 0, rng, 'smart'), chooseAction(state, 1, rng), rng).state;
+    else state = resolveTurn(state, chooseAction(state, 0, rng, matchup.playerAi ?? 'smart'), chooseAction(state, 1, rng), rng).state;
   }
   return state.outcome === 'win';
 }

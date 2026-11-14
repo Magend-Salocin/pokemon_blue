@@ -15,9 +15,6 @@ export const LAND = [
 ];
 
 export const ZONES = [
-  { map: 'test_bourg', name: 'Bourg d’essai', x: 2, y: 11, w: 1, h: 1 },
-  { map: 'test_route', name: 'Route d’essai', x: 2, y: 9, w: 1, h: 2 },
-  { map: 'test_grotte', name: 'Grotte d’essai', x: 3, y: 8, w: 1, h: 1 },
   { map: 'hameau_de_lys', name: 'Hameau-de-Lys', x: 2, y: 12, w: 1, h: 1 },
   { map: 'route_1', name: 'Route 1', x: 3, y: 10, w: 1, h: 2 },
   { map: 'bourg_sablon', name: 'Bourg-Sablon', x: 4, y: 9, w: 1, h: 1 },
@@ -25,6 +22,18 @@ export const ZONES = [
   { map: 'grotte_des_cascades', name: 'Grotte des Cascades', x: 7, y: 5, w: 1, h: 2 },
   { map: 'port_ondine', name: 'Port-Ondine', x: 8, y: 6, w: 1, h: 1 },
   { map: 'vireval', name: 'Vireval', x: 11, y: 4, w: 1, h: 1 },
+  { map: 'route_2', name: 'Route 2', x: 5, y: 9, w: 1, h: 1 },
+  { map: 'route_3', name: 'Route 3', x: 7, y: 7, w: 1, h: 1 },
+  { map: 'grotte_des_cascades_2', name: 'Grotte des Cascades', x: 7, y: 5, w: 1, h: 2 },
+  { map: 'route_4', name: 'Route 4', x: 9, y: 6, w: 1, h: 1 },
+  { map: 'route_5', name: 'Route 5', x: 10, y: 5, w: 1, h: 1 },
+  { map: 'usine_opale_1', name: 'Usine Opale', x: 11, y: 4, w: 1, h: 1 },
+  { map: 'usine_opale_2', name: 'Usine Opale', x: 11, y: 4, w: 1, h: 1 },
+  { map: 'route_6', name: 'Route 6', x: 11, y: 3, w: 1, h: 1 },
+  { map: 'tunnel_obscur', name: 'Tunnel Obscur', x: 12, y: 2, w: 1, h: 2 },
+  { map: 'tour_memoire_2', name: 'Tour de la Mémoire', x: 14, y: 2, w: 1, h: 1 },
+  { map: 'tour_memoire_3', name: 'Tour de la Mémoire', x: 14, y: 2, w: 1, h: 1 },
+  { map: 'tour_memoire_4', name: 'Tour de la Mémoire', x: 14, y: 2, w: 1, h: 1 },
   { map: 'cendrelune', name: 'Cendrelune', x: 13, y: 2, w: 1, h: 1 },
   { map: 'haute_bise', name: 'Haute-Bise', x: 17, y: 8, w: 1, h: 1 },
   { map: 'marais_gris', name: 'Marais Gris', x: 2, y: 4, w: 2, h: 2 },

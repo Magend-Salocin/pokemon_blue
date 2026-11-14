@@ -4,7 +4,8 @@
 export default {
   id: 'route_4',
   name: 'Route 4',
-  tileset: 'outdoor',
+  tileset: 'town',
+  clearTile: 'grass',
   music: 'route_2',
   border: 'T',
   layers: {
@@ -53,7 +54,7 @@ export default {
     { id: 'nageuse_clara', sprite: 'nageur', x: 22, y: 13, facing: 'left', sight: 4, trainer: 'nageuse_clara' },
     { id: 'pecheur_marcel', sprite: 'pecheur', x: 15, y: 13, facing: 'up', sight: 2, trainer: 'pecheur_marcel' },
     { id: 'pecheur_alain', sprite: 'pecheur', x: 28, y: 12, facing: 'left', sight: 3, trainer: 'pecheur_alain' },
-    { id: 'dresseuse_ines', sprite: 'dresseuse', x: 21, y: 6, facing: 'left', sight: 4, trainer: 'dresseuse_ines' },
+    { id: 'dresseuse_ines', sprite: 'dresseuse', x: 19, y: 6, facing: 'right', sight: 4, trainer: 'dresseuse_ines' },
     { id: 'campeuse_julie', sprite: 'campeuse', x: 17, y: 2, facing: 'down', sight: 3, trainer: 'campeuse_julie' },
     { id: 'randonneur_gilles', sprite: 'randonneur', x: 20, y: 9, facing: 'up', sight: 1, trainer: 'randonneur_gilles' },
   ],

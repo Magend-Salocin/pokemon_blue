@@ -92,8 +92,8 @@ export default {
     { x: 13, y: 21, item: 'repulsif_fort', flag: 'hidden_route_6_2' },
   ],
   triggers: [
-    { x: 9, y: 3, w: 1, h: 1, script: 'gate_tunnel' },
-    { x: 15, y: 15, w: 1, h: 1, script: 'centrale_door' },
+    { x: 9, y: 3, w: 1, h: 1, script: [{ cmd: 'call', script: 'gate_tunnel' }] },
+    { x: 15, y: 15, w: 1, h: 1, script: [{ cmd: 'call', script: 'centrale_door' }] },
   ],
   connections: { north: null, south: 'vireval', east: null, west: null },
   scripts: {

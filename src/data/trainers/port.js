@@ -10,7 +10,7 @@ export default [
   // Arène Eau
   trainer('nageur_theo', 'nageur', 'Théo', ['goujonet:16', 'ombrelle:17']),
   trainer('pecheur_rene', 'pecheur', 'René', ['crabouille:17', 'goujarde:18']),
-  trainer('mael', 'champion', 'Maël', ['goujonet:17', 'crabouille:18', 'anguilet:18', 'goujarde:20'], {
+  trainer('mael', 'champion', 'Maël', ['goujonet:17', 'crabouille:18', 'ombrelle:18', 'goujarde:20'], {
     portrait: 'portrait/mael', ai: 'smart', last: true,
   }),
 
@@ -30,7 +30,7 @@ export default [
   trainer('dresseuse_eva', 'dresseuse', 'Éva', ['cocolet:18', 'toisonnet:18', 'grivelin:19']),
   trainer('ecolier_lucas', 'ecolier', 'Lucas', ['lampyrin:16', 'cocolet:17']),
   trainer('motard_kevin', 'motard', 'Kévin', ['fumeron:18', 'musarogne:20']),
-  trainer('gentleman_armand', 'gentleman', 'Armand', ['bovaillon:19', 'grivelin:20']),
+  trainer('gentleman_hippolyte', 'gentleman', 'Hippolyte', ['bovaillon:19', 'grivelin:20']),
 
   // Usine Opale (19-24)
   trainer('sbire_usine_1', 'sbire_opale', 'Sbire', ['crassou:20', 'noctule:19']),
@@ -45,7 +45,7 @@ export default [
   trainer('ouvrier_remi', 'ouvrier', 'Rémi', ['ampoulin:22', 'lampyrin:22', 'boulonnet:23']),
   trainer('scientifique_gaspard', 'scientifique', 'Gaspard', ['boulonnet:22', 'piquevolt:23']),
   trainer('chercheuse_lea', 'chercheuse', 'Léa', ['lampyrex:24', 'ampoulin:25']),
-  trainer('selene', 'championne', 'Sélène', ['piquevolt:23', 'lampyrex:24', 'ampoulin:24', 'ampoulard:26'], {
+  trainer('selene', 'championne', 'Sélène', ['piquevolt:22', 'lampyrex:23', 'ampoulin:24', 'ampoulard:26'], {
     portrait: 'portrait/selene', ai: 'smart', last: true,
   }),
 ];

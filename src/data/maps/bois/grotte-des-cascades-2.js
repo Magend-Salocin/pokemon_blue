@@ -46,12 +46,12 @@ export default {
     { x: 22, y: 10, to: 'port_ondine', toX: 0, toY: 8 },
   ],
   npcs: [
-    // Never shown on load (rival_2_visible is never set): appears only during the scene.
+    // Hidden on load: rival_2_visible is only set for the instant of show_actor during the scene.
     { id: 'rivale', sprite: 'rival', x: 21, y: 10, facing: 'left', movement: 'static',
       showIf: 'rival_2_visible', script: [{ cmd: 'say', text: 'rival_2_after' }] },
   ],
   trainers: [
-    { id: 'montagnard_auguste', sprite: 'montagnard', x: 9, y: 3, facing: 'down', sight: 3, trainer: 'montagnard_auguste' },
+    { id: 'montagnard_auguste', sprite: 'montagnard', x: 11, y: 3, facing: 'down', sight: 3, trainer: 'montagnard_auguste' },
     { id: 'randonneuse_berenice', sprite: 'dresseuse', x: 3, y: 13, facing: 'right', sight: 4, trainer: 'randonneuse_berenice' },
     { id: 'randonneur_lucien', sprite: 'randonneur', x: 13, y: 16, facing: 'down', sight: 2, trainer: 'randonneur_lucien' },
   ],
@@ -67,7 +67,9 @@ export default {
   scripts: {
     rival_2: [{ cmd: 'if_flag', flag: 'rival_2_done', else: [
       { cmd: 'play_music', track: 'encounter_rival' },
+      { cmd: 'set_flag', flag: 'rival_2_visible' },
       { cmd: 'show_actor', actor: 'rivale' },
+      { cmd: 'clear_flag', flag: 'rival_2_visible' },
       { cmd: 'move', actor: 'rivale', path: ['left', 'left', 'left'] },
       { cmd: 'face', actor: 'rivale', direction: 'player' },
       { cmd: 'face', actor: 'player', direction: 'right' },

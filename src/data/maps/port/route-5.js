@@ -4,7 +4,8 @@
 export default {
   id: 'route_5',
   name: 'Route 5',
-  tileset: 'outdoor',
+  tileset: 'town',
+  clearTile: 'grass',
   music: 'route_2',
   border: 'T',
   layers: {
@@ -21,8 +22,8 @@ export default {
       ':::::::::::::::::::::::::::b::::',
       'TT......................TTTTTTTT',
       'TTvvvvvvvvvvvv..vvvvvvvvTTTTTTTT',
-      '##....,,,,,,,,,,TT,,,,,,TTTTTTTT',
-      '##~~~~,,,,,,,,,,TT,,,,,,TTTTTTTT',
+      '##....,,,,,,,,,,,,,,,,,,TTTTTTTT',
+      '##~~~~,,,,,,,,,,,,,,,,,,TTTTTTTT',
       '~~~~~~TTTTTTTTTTTTTTTTTTTTTTTTTT',
       '~~~~~~TTTTTTTTTTTTTTTTTTTTTTTTTT',
       '~~~~~~TTTTTTTTTTTTTTTTTTTTTTTTTT',
@@ -54,7 +55,7 @@ export default {
     { id: 'dresseuse_eva', sprite: 'dresseuse', x: 21, y: 7, facing: 'left', sight: 4, trainer: 'dresseuse_eva' },
     { id: 'ecolier_lucas', sprite: 'gamin', x: 7, y: 12, facing: 'right', sight: 3, trainer: 'ecolier_lucas' },
     { id: 'motard_kevin', sprite: 'motard', x: 21, y: 10, facing: 'left', sight: 5, trainer: 'motard_kevin' },
-    { id: 'gentleman_armand', sprite: 'gentleman', x: 23, y: 13, facing: 'left', sight: 3, trainer: 'gentleman_armand' },
+    { id: 'gentleman_hippolyte', sprite: 'gentleman', x: 23, y: 13, facing: 'left', sight: 3, trainer: 'gentleman_hippolyte' },
   ],
   signs: [{ x: 25, y: 7, text: 'sign_route_5' }],
   items: [

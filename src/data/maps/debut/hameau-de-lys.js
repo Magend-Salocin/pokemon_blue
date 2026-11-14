@@ -84,12 +84,8 @@ export default {
   items: [],
   hiddenItems: [{ x: 2, y: 2, item: 'potion', flag: 'hidden_hameau_de_lys_1' }],
   triggers: [
-    { x: 9, y: 2, w: 1, h: 1, script: 'gate_left' },
-    { x: 10, y: 2, w: 1, h: 1, script: 'gate_right' },
+    { x: 9, y: 2, w: 1, h: 1, script: gateScript(['up', 'up', 'up', 'up', 'up']) },
+    { x: 10, y: 2, w: 1, h: 1, script: gateScript(['up', 'up', 'up', 'up', 'right', 'up']) },
   ],
   connections: { north: 'route_1', south: null, east: null, west: null },
-  scripts: {
-    gate_left: gateScript(['up', 'up', 'up', 'up', 'up']),
-    gate_right: gateScript(['up', 'up', 'up', 'up', 'right', 'up']),
-  },
 };

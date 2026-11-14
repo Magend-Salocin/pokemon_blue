@@ -12,7 +12,7 @@ Chaque session d'implémentation ajoute une entrée en bas de ce fichier : promp
 | 06 Interface de combat | fait |
 | 07 Menus et systèmes | fait |
 | 08 Audio | fait |
-| 09 Monde, partie 1 (arènes 1 à 4) | à faire |
+| 09 Monde, partie 1 (arènes 1 à 4) | fait |
 | 10 Monde, partie 2 (arènes 5 à 8) | à faire |
 | 11 Ligue, post-jeu, fin | à faire |
 | 12 Sauvegarde, finition, packaging | à faire |
@@ -316,3 +316,41 @@ Décisions
 
 Problèmes connus
 - Aucun.
+
+### 2026-11-14 : prompt 09, monde de l'introduction à l'arène 4
+
+Fait
+- Moteur :
+  - scène d'introduction (`src/ui/intro-scene.js` : Pr Morvan, bestiole de présentation, garçon ou fille, nom du joueur et de la rivale saisis ou choisis parmi 3 propositions) ; NOUVELLE PARTIE démarre dans la chambre (`GAME_START`), réapparition devant Maman avant toute Halte (`HOME_RESPAWN`) ;
+  - choix du starter (`src/ui/starter-choice.js`, sprite et confirmation) : `choose_starter` donne la bestiole niveau 5 et pose `starter_<espèce>` ;
+  - commande `battle` avec branches `won` / `lost` ; la musique de la carte reprend après un combat scripté ;
+  - dresseurs : `lastText` (réplique avant la dernière bestiole), `partyByStarter` (équipe de la rivale selon le starter du joueur), nom de la rivale dans le combat, variable `{TYPE}` ;
+  - sprite d'objet `barriere` ; les objets (`rocher`, `barriere`) peuvent servir de PNJ immobiles (obstacles d'énigme) ;
+  - menu F1 : téléportation vers n'importe quelle carte, badge suivant avec son objet de terrain ; `npm run dev -- --newgame` démarre sur l'écran titre.
+- Données par zone : `src/data/maps/<zone>/`, `src/data/trainers/<zone>.js`, `src/data/texts/<zone>.js` (zones `debut`, `bois`, `port`, `cendrelune`), gabarits `halte`, `comptoir`, `house` (`src/data/maps/interiors.js`), aides `trainer` et `rival` (`src/data/trainers/helpers.js`).
+- Contenu : 50 cartes (Hameau-de-Lys à la Tour de la Mémoire, intérieurs, 4 arènes, usine Opale, 5 étages de la Tour, cour de la Centrale fermée), 92 dresseurs, 63 objets au sol (dont 23 cachés), 71 espèces capturables, 2 échanges PNJ, pension. Scénario complet : professeure, starter, rivale 1, colis, Bestiaire, Syndicat dans le Bois, rivale 2, usine Opale, Lanterne, rivale 3, lieutenant Gerfaut, apparition de Corvin Halvard, Grappin. Détails, verrous et drapeaux dans `docs/WORLD_MAP.md`.
+- Énigmes d'arène : plaques qui écartent des rochers (Roche), dalles glissantes entre des bassins (Eau), interrupteurs qui coupent des barrières (Foudre), labyrinthe de haies à couper (Flore).
+- Validateur : drapeaux lus mais jamais posés (`tools/validators/flags.js`), dresseurs utilisés par aucune carte ni aucun script, équipes par starter, attaques imposées, texte `lastText`.
+- `npm run balance` (`tools/balance-check.js`) : 200 combats par starter et par champion ou rival, équipe « joueur attendu » = starter + 2 captures des zones traversées. Résultats (moyenne, puis Fenouillot / Braisille / Flaquin) : rivale 1 69 % (72/66/69), Garance 73 % (77/45/98), rivale 2 75 % (39/97/90), Maël 72 % (91/25/99), Sélène 73 % (62/73/83), Aubin 68 % (71/100/33), rivale 3 78 % (63/72/100).
+- Région du Bestiaire : zones des nouvelles routes, du Tunnel, de l'usine et de la Tour ; zones de test retirées.
+- Tests : `tests/world.test.js`, branches de combat et starter dans `tests/script-runner.test.js` (212 tests).
+- Vérifié dans Electron en pilotant le jeu : intro complète jusqu'à la chambre ; sortie du Hameau arrêtée par la professeure, labo, choix du starter, combat contre la rivale ; colis au Comptoir, Bestiaire et 5 capsules ; les 4 champions (badge et pierre), Machette, usine Opale, Lanterne, rivale 3, sommet de la Tour (Corvin, Grappin) ; verrous de Bourg-Sablon, de la grotte, du tunnel et de la Tour sans la condition. Aucune erreur console. Énigme de glace de l'arène Eau vérifiée par parcours exhaustif (soluble, aucune position sans retour).
+
+Reste
+- Le parcours complet à la main, de bout en bout avec une équipe réaliste, n'a pas été fait : les étapes ont été jouées par téléportation avec une équipe de test, chaque carte relue sur son aperçu (`npm run map-preview`).
+- L'équilibrage reste sensible au starter (Braisille face à la Roche et à l'Eau, Flaquin face à la Flore), comme attendu avec la table des types ; la moyenne est dans la cible.
+
+Décisions
+- Production des 4 zones en parallèle, à partir d'un contrat commun (`docs/WORLD_MAP.md` : tailles, passages des connexions, coordonnées des liaisons entre zones).
+- Textes dans `src/data/texts/<zone>.js` (dossier existant) au lieu de `src/data/text/fr/`. Format des dresseurs existant gardé (`creature`, `intro`, `defeat`, `after`), produit par `trainer()`.
+- Les routes avec bâtiment utilisent le tileset `town` (`clearTile: 'grass'`), `outdoor` n'ayant pas les tuiles de bâtiments. L'arène Eau utilise le tileset `cave` (eau et glace), l'arène Flore `outdoor`.
+- La Tour n'a pas d'escalier : dalles `X` entre les étages.
+- Badges : Roche ouvre la Grotte des Cascades (garde de la Route 3), Eau la Machette, Foudre la Lanterne, Flore le Grappin et la Tour. Les bestioles échangées obéissent toujours. L'arène Foudre est fermée tant que l'usine Opale n'est pas libérée.
+- Récompenses des champions : Pierre Lunaire, Pierre Marine, Pierre Orage, Pierre Solaire.
+- Rivale 1 : son starter ne connaît que des attaques de base (sinon l'avantage de type décide seul du combat) et son niveau varie selon le starter du joueur. Le simulateur joue le joueur sans objet pour ce combat, avec l'IA `smart` (2 soins) ensuite.
+- Classe ajoutée : `lieutenant_opale` (Brisac à l'usine, Gerfaut à la Tour).
+- Les PNJ de cinématique sont affichés par un drapeau `*_visible` posé juste avant `show_actor`, et cachés ensuite par le drapeau de fin d'événement.
+
+Problèmes connus
+- Pour le prompt 10 : ouvrir la Route 7 (ouvrier du bord est de Cendrelune, à cacher par un drapeau) et la Centrale (porte scellée de la cour de la Route 6, à remplacer par un warp).
+

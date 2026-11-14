@@ -76,7 +76,7 @@ export default {
   signs: [{ x: 16, y: 11, text: 'sign_route_3' }],
   items: [
     { x: 2, y: 3, item: 'capsule', flag: 'item_route_3_1' },
-    { x: 17, y: 18, item: 'potion', flag: 'item_route_3_2' },
+    { x: 17, y: 19, item: 'potion', flag: 'item_route_3_2' },
     { x: 2, y: 16, item: 'repulsif', flag: 'item_route_3_3' },
   ],
   hiddenItems: [{ x: 2, y: 13, item: 'sel_eveil', flag: 'hidden_route_3_1' }],

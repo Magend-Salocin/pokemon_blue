@@ -18,6 +18,6 @@ export default comptoir({
     { item: 'repulsif_fort' },
   ],
   npcs: [
-    { id: 'dame', sprite: 'dame', x: 4, y: 4, facing: 'left', movement: 'static', script: [{ cmd: 'say', text: 'comptoir_cendrelune_dame' }] },
+    { id: 'dame', sprite: 'vieille_dame', x: 4, y: 4, facing: 'left', movement: 'static', script: [{ cmd: 'say', text: 'comptoir_cendrelune_dame' }] },
   ],
 });

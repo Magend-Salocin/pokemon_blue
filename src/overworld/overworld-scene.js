@@ -621,7 +621,11 @@ export class OverworldScene {
         actor.facing = directionTo(actor.x, actor.y, this.player.x, this.player.y) ?? OPPOSITE[this.player.facing];
       },
       wait: (seconds) => this.scheduler.wait(seconds),
-      battle: (trainerId, onLose) => this.battle(trainerId, onLose),
+      battle: async (trainerId, onLose) => {
+        const outcome = await this.battle(trainerId, onLose);
+        if (outcome !== 'lose' || onLose !== 'blackout') hooks.playMusic(this.map.music);
+        return outcome;
+      },
       createCreature: (species, level) => createCreature(species, level, this.rng, { originalTrainer: this.state.player.name }),
       wildBattle: (creature, level) => this.wildBattle(creature, level),
       blackout: () => this.blackout(),

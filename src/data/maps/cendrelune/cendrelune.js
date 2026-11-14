@@ -54,6 +54,7 @@ export default {
       { creature: 'butinelle', minLevel: 30, maxLevel: 30, weight: 5 },
       { creature: 'corolline', minLevel: 30, maxLevel: 30, weight: 3 },
       { creature: 'lumirande', minLevel: 30, maxLevel: 30, weight: 3 },
+      { creature: 'volplanin', minLevel: 28, maxLevel: 30, weight: 3 },
       { creature: 'dionavore', minLevel: 32, maxLevel: 32, weight: 1 },
     ],
   },
@@ -69,7 +70,7 @@ export default {
   npcs: [
     { id: 'jardinier', sprite: 'vieil_homme', x: 3, y: 3, facing: 'right', movement: 'static', script: [{ cmd: 'say', text: 'cendrelune_jardinier' }] },
     { id: 'apprentie', sprite: 'mystique', x: 12, y: 5, facing: 'left', movement: 'static', script: 'apprentie' },
-    { id: 'ouvrier_eboulement', sprite: 'ouvrier', x: 22, y: 10, facing: 'left', movement: 'static', hideIf: 'route_7_ouverte', script: [{ cmd: 'say', text: 'cendrelune_eboulement' }] },
+    { id: 'ouvrier_eboulement', sprite: 'ouvrier', x: 22, y: 10, facing: 'left', movement: 'static', script: [{ cmd: 'say', text: 'cendrelune_eboulement' }] },
     { id: 'fillette', sprite: 'fillette', x: 15, y: 16, facing: 'down', movement: 'wander', radius: 2, script: [{ cmd: 'say', text: 'cendrelune_fillette' }] },
     { id: 'vieille_dame', sprite: 'vieille_dame', x: 13, y: 9, facing: 'down', movement: 'look', script: [{ cmd: 'say', text: 'cendrelune_vieille_dame' }] },
     { id: 'gentleman', sprite: 'gentleman', x: 7, y: 10, facing: 'down', movement: 'look', script: 'gentleman' },
@@ -84,7 +85,7 @@ export default {
   ],
   items: [],
   hiddenItems: [{ x: 6, y: 3, item: 'sucre_dorge', flag: 'hidden_cendrelune_1' }],
-  triggers: [{ x: 11, y: 5, w: 1, h: 1, script: 'gate_tour' }],
+  triggers: [{ x: 11, y: 5, w: 1, h: 1, script: [{ cmd: 'call', script: 'gate_tour' }] }],
   connections: {},
   scripts: {
     gate_tour: [{ cmd: 'if_badge', badge: 'flore', else: [

@@ -103,6 +103,7 @@ async function boot() {
     installBattleHooks(scenes);
     installMenuHooks(scenes);
     if (isDev) {
+      window.debugGame = { scenes, hooks, audio };
       attachDebugMenu();
       if (new URLSearchParams(window.location.search).has('newgame')) showTitle();
       else startGame(getGameState(), TEST_START, TEST_START);

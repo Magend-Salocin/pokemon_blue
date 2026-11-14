@@ -43,7 +43,7 @@ export class IntroScene extends PromiseScene {
 
   choose(labels) {
     return withMenuLayer(this.manager, (layer) =>
-      layer.open(new ListMenu(labels.map((label) => ({ label })), { x: 0, y: 0, width: 96, rows: labels.length, cancellable: false })));
+      layer.open(new ListMenu(labels.map((label) => ({ label })), { x: 0, y: 0, width: 128, rows: labels.length, cancellable: false })));
   }
 
   async chooseName(title, suggestions) {
